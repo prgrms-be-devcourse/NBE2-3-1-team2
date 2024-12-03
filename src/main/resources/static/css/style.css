@@ -1,0 +1,221 @@
+* {
+	box-sizing: border-box;
+}
+
+
+.container-fluid {
+	min-width: 768px;
+}
+
+.card {
+	margin: auto;
+	max-width: 950px;
+	width: 90%;
+	box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 1rem;
+}
+
+.form-login {
+	max-width: 567px;
+}
+
+.row {
+	margin: 0
+}
+
+.brand-logo {
+	width: 10rem;
+}
+.product-img {
+	width: 6rem;
+}
+ 
+.cart-icon, .logout-icon {
+	font-size: 24px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.products {
+	width: 100%;
+}
+
+/* purchase-history.html */
+.purchase-group {
+	list-style: none;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.purchase-group-item {
+	width: 100%;
+}
+
+/* cart and purchase button */
+.quick-link {
+	display: inline-block;
+	border-radius: 20px;
+	padding: 10px;
+	padding-bottom: 0;
+	text-decoration: none;
+}
+
+.quick-link > span {
+	transition: color 0.15s;
+}
+
+.quick-link:hover > span {
+	color: #2e4fe4;
+}
+.cart {
+	position: relative;
+	margin: 0 10px;
+}
+.cart > div {
+	margin: auto;
+}
+.quick-link * {
+	display: block;
+	line-height: normal;
+	color: #000;
+}
+
+.quick-link {
+	transition: all 0.3s;
+}
+
+.login-btn-div{
+	display: inline-block;
+	margin: auto;
+}
+
+.cart-count {
+	font-style: normal;
+	position: absolute;
+	background-color: #346AFF;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	border-radius: 100%;
+	text-align: center;
+	font-size: 0.7rem;
+	color: white;
+	top: 0px;
+	right: 8px;
+}
+
+.cart-title {
+	font-size: 0.7rem;
+}
+
+
+/* input number custom button */
+.num-input-div {
+	display: flex;
+}
+.num-input-div input {
+	text-align: center;
+	width: 45px;
+	height: 38px;
+	border: 1px solid #ced4da;
+	border-radius: 4px 0 0 4px
+}
+.num-btn {
+	display: flex;
+	flex-direction: column;
+	height: 38px;
+}
+.num-btn button {
+	width: 30px;
+	height: 50%;
+	background-position: center;
+	background-repeat: no-repeat;
+	border: 1px solid #ced4da;
+	border-left: none;
+	background-size: 100% 100%;
+	cursor: pointer;
+	padding: 0;
+}
+.num-btn button:active {
+	background-color: #e9ecef;
+}
+.num-btn .inc {
+	background-image: url(../images/btn_up.png);
+	border-radius: 0 4px 0 0; /* 오른쪽 위 모서리 둥글게 */
+	border-bottom: none;
+}
+
+.num-btn .dec {
+	background-image: url(../images/btn_down.png);
+	border-radius: 0 0 4px 0; /* 오른쪽 아래 모서리 둥글게 */
+}
+
+/* login.jsp */
+.reg-link {
+	color: #000;
+	text-decoration: none;
+	transition: color 0.15s;
+}
+.reg-link:hover {
+	color: #2e4fe4;
+}
+
+/* shopping_cart.jsp */
+.delete-btn {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	font-size: 0.8rem;
+	text-decoration: none;
+	color: red;
+	font-weight: bold;
+	transition: color 0.15s;
+}
+
+.delete-btn:hover {
+	color: #7c0000;
+}
+.purchase-form {
+	min-width: 300px;
+}
+
+.cart-card {
+	max-width: 1200px;
+	min-width: 900px;
+}
+@media (max-width: 1000px) {
+	.cart-container {
+		flex-direction: column;
+	}
+	.purchase-list-container {
+		flex-direction: column;
+	}
+}
+
+/* Toast 컨테이너 */
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+	flex-direction: column-reverse;
+  gap: 10px;
+}
+
+.toast-msg {
+  background-color: #333;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.toast-msg.hide {
+  opacity: 0;
+	transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(20px);
+}
