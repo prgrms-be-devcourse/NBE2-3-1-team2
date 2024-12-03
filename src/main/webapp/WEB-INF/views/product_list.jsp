@@ -1,4 +1,40 @@
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.project01.dto.ProductTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<ProductTO> lists = (ArrayList<ProductTO>) request.getAttribute("lists");
+	StringBuilder sbHtml = new StringBuilder();
+
+	for (ProductTO productTO : lists) {
+		int pid = productTO.getPid();
+		String img = productTO.getImg();
+		String name = productTO.getName();
+		String cat = productTO.getCat();
+		int stk = productTO.getStk();
+		int price = productTO.getPrice();
+
+		sbHtml.append("<li class=\"list-group-item d-flex align-items-center\">");
+		sbHtml.append("<div>");
+		sbHtml.append("<img class=\"product-img\" src=\"./images/" + img + "\">");
+		sbHtml.append("</div>");
+		sbHtml.append("<div class=\"col\">");
+		sbHtml.append("<div class=\"text-muted\">" + cat + "</div>");
+		sbHtml.append("<div>" + name + "</div>");
+		sbHtml.append("</div>");
+		sbHtml.append("<div class=\"px-3 text-center\">" + price + "</div>");
+		sbHtml.append("<div class=\"px-3 num-input-div\">");
+		sbHtml.append("<input type=\"text\" class=\"num-input\" value=\"1\">");
+		sbHtml.append("<div class=\"num-btn\">");
+		sbHtml.append("<button class=\"inc\" onclick=\"updateValue(this,1)\" />");
+		sbHtml.append("<button class=\"dec\" onclick=\"updateValue(this,-1)\" />");
+		sbHtml.append("</div>");
+		sbHtml.append("</div>");
+		sbHtml.append("<div class=\"text-end\">");
+		sbHtml.append("<button class=\"btn btn-outline-dark\" onclick=\"createToastMsg(3)\">담기</button>");
+		sbHtml.append("</div>");
+		sbHtml.append("</li>");
+	}
+%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -44,68 +80,69 @@
 						<h5>상품 목록</h5>
 						<hr>
 					</div>
-					<ul class="list-group products">
-						<li class="list-group-item d-flex align-items-center">
-							<div>
-								<img class="product-img" src="./images/coffee_bean_01.png">
-							</div>
-							<div class="col">
-								<div class="text-muted">커피콩</div>
-								<div>Columbia Nariñó</div>
-							</div>
-							<div class="px-3 text-center">5,000원</div>
-							<div class="px-3 num-input-div">
-								<input type="text" class="num-input" value="1">
-								<div class="num-btn">
-									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-								</div>
-							</div>
-							<div class="text-end">
-								<button class="btn btn-outline-dark" onclick="createToastMsg(1)">담기</button>
-							</div>
-						</li>
-						<li class="list-group-item d-flex align-items-center">
-							<div>
-								<img class="product-img" src="./images/coffee_bean_01.png">
-							</div>
-							<div class="col">
-								<div class="text-muted">커피콩</div>
-								<div>Columbia Nariñó</div>
-							</div>
-							<div class="px-3 text-center">5,000원</div>
-							<div class="px-3 num-input-div">
-								<input type="text" class="num-input" value="1">
-								<div class="num-btn">
-									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-								</div>
-							</div>
-							<div class="text-end">
-								<button class="btn btn-outline-dark" onclick="createToastMsg(2)">담기</button>
-							</div>
-						</li>
-						<li class="list-group-item d-flex align-items-center">
-							<div>
-								<img class="product-img" src="./images/coffee_bean_01.png">
-							</div>
-							<div class="col">
-								<div class="text-muted">커피콩</div>
-								<div>Columbia Nariñó</div>
-							</div>
-							<div class="px-3 text-center">5,000원</div>
-							<div class="px-3 num-input-div">
-								<input type="text" class="num-input" value="1">
-								<div class="num-btn">
-									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-								</div>
-							</div>
-							<div class="text-end">
-								<button class="btn btn-outline-dark" onclick="createToastMsg(3)">담기</button>
-							</div>
-						</li>
-					</ul>
+<%--					<ul class="list-group products">--%>
+<%--						<li class="list-group-item d-flex align-items-center">--%>
+<%--							<div>--%>
+<%--								<img class="product-img" src="./images/coffee_bean_01.jpg">--%>
+<%--							</div>--%>
+<%--							<div class="col">--%>
+<%--								<div class="text-muted">커피콩</div>--%>
+<%--								<div>Columbia Nariñó</div>--%>
+<%--							</div>--%>
+<%--							<div class="px-3 text-center">5,000원</div>--%>
+<%--							<div class="px-3 num-input-div">--%>
+<%--								<input type="text" class="num-input" value="1">--%>
+<%--								<div class="num-btn">--%>
+<%--									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->--%>
+<%--									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->--%>
+<%--								</div>--%>
+<%--							</div>--%>
+<%--							<div class="text-end">--%>
+<%--								<button class="btn btn-outline-dark" onclick="createToastMsg(1)">담기</button>--%>
+<%--							</div>--%>
+<%--						</li>--%>
+<%--						<li class="list-group-item d-flex align-items-center">--%>
+<%--							<div>--%>
+<%--								<img class="product-img" src="./images/coffee_bean_01.jpg">--%>
+<%--							</div>--%>
+<%--							<div class="col">--%>
+<%--								<div class="text-muted">커피콩</div>--%>
+<%--								<div>Columbia Nariñó</div>--%>
+<%--							</div>--%>
+<%--							<div class="px-3 text-center">5,000원</div>--%>
+<%--							<div class="px-3 num-input-div">--%>
+<%--								<input type="text" class="num-input" value="1">--%>
+<%--								<div class="num-btn">--%>
+<%--									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->--%>
+<%--									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->--%>
+<%--								</div>--%>
+<%--							</div>--%>
+<%--							<div class="text-end">--%>
+<%--								<button class="btn btn-outline-dark" onclick="createToastMsg(2)">담기</button>--%>
+<%--							</div>--%>
+<%--						</li>--%>
+<%--						<li class="list-group-item d-flex align-items-center">--%>
+<%--							<div>--%>
+<%--								<img class="product-img" src="./images/coffee_bean_01.jpg">--%>
+<%--							</div>--%>
+<%--							<div class="col">--%>
+<%--								<div class="text-muted">커피콩</div>--%>
+<%--								<div>Columbia Nariñó</div>--%>
+<%--							</div>--%>
+<%--							<div class="px-3 text-center">5,000원</div>--%>
+<%--							<div class="px-3 num-input-div">--%>
+<%--								<input type="text" class="num-input" value="1">--%>
+<%--								<div class="num-btn">--%>
+<%--									<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->--%>
+<%--									<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->--%>
+<%--								</div>--%>
+<%--							</div>--%>
+<%--							<div class="text-end">--%>
+<%--								<button class="btn btn-outline-dark" onclick="createToastMsg(3)">담기</button>--%>
+<%--							</div>--%>
+<%--						</li>--%>
+<%--					</ul>--%>
+					<%=sbHtml.toString()%>
 				</div>
 			</div>
 		</main>

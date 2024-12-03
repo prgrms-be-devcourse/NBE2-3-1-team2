@@ -8,6 +8,7 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 public class ProductTO {
+    // database table 형 확인 필수
     private int pid;
     private String img;
     private String name;
