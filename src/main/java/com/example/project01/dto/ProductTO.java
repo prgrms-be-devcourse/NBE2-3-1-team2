@@ -11,7 +11,7 @@ public class ProductTO {
     private int pid;
     private String img;
     private String name;
-    private String stk;
-    private int cat;
+    private String cat;
+    private int stk;
     private int price;
 }
