@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.ProductMapper">
+
+    <!--상품-->
+    <select id="productList" resultType="product">
+        select pid, img, name, cat, stk, price
+        from product
+    </select>
+
+    <insert id="productInsert">
+        INSERT INTO product (img, name, cat, stk, price)
+        VALUES (#{img}, #{name}, #{cat}, #{stk}, #{price});
+    </insert>
+
+    <update id="stkUpdate">
+        UPDATE product
+        SET stk = #{stk}
+        WHERE pid = #{pid};
+    </update>
+
+    <delete id="productDelete">
+        DELETE FROM product WHERE pid = #{pid};
+    </delete>
+
+</mapper>

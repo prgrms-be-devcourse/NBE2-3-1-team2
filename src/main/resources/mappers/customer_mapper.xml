@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.CustomerMapper">
+
+    <!--고객-->
+    <insert id="userInsert">
+        INSERT INTO customer (email, pwd, addr, zip)
+        VALUES (#{email}, password(#{pwd}), #{addr}, #{zip});
+    </insert>
+
+    <update id="addrUpdate">
+        UPDATE customer
+        SET addr = #{addr}, zip = #{zip}
+        WHERE cid = #{cid};
+    </update>
+
+    <delete id="userDelete">
+        DELETE FROM customer WHERE cid = #{cid};
+    </delete>
+
+</mapper>
