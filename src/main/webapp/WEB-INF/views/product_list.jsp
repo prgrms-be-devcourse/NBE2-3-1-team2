@@ -1,3 +1,5 @@
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.example.project01.dto.ProductTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -12,28 +14,85 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		  integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<title>Grids & Circle</title>
+	<script type="text/javascript">
+		window.onload = function() {
+
+			const request = new XMLHttpRequest();
+			request.onreadystatechange = function () {
+				if ( request.readyState == 4 ) {
+					if ( request.status == 200 ) {
+						// 정상처리
+
+						// json 형태로 출력
+						const jsonData = JSON.parse( request.responseText.trim());
+
+						// 정상 출력 확인
+						// console.log(jsonData);
+
+						// 제품 리스트 구성
+						let result = '';
+						for ( let i=0; i < jsonData.length; i++ ) {
+
+							let jData = jsonData[i];
+
+							result += '<li class="list-group-item d-flex align-items-center">';
+							result += '<div>';
+							result += '<img class="product-img" src="./images/'+ jData.img +'">';
+							result += '</div>'
+							result += '<div class="col">';
+							result += '<div class="text-muted">' + jData.cat + '</div>';
+							result += '<div>' + jData.name + '</div>';
+							result += '</div>';
+							result += '<div class="px-3 text-center">' + jData.price +'원</div>';
+							result += '<div class="px-3 num-input-div">';
+							result += '<input type="text" class="num-input" id="input-' + jData.pid + '" value="1">';
+							// result += '<input type="hidden" class="product_pid" id="pid" value="' + jData.pid + '">';
+							result += '<div class="num-btn">';
+							result += '<button class="inc" onclick="updateValue(this,1)"/>';
+							result += '<button class="dec" onclick="updateValue(this,-1)"/>';
+							result += '</div>'
+							result += '</div>'
+							result += '<div class="text-end">';
+							// result += '<button class="btn btn-outline-dark" onclick="cartIn(this, ${jData.pid})">담기</button>';
+							result += '<button class="btn btn-outline-dark" onclick="cartIn(\'input-' + jData.pid + '\', ' + jData.pid + ')">담기</button>';
+							result += '</div>';
+							result += '</li>';
+						}
+
+						document.getElementById('result').innerHTML = result;
+
+					} else {
+						alert("[에러] 페이지 오류(404, 500)")
+					}
+				}
+			}
+			request.open("GET", "/api/productList", true);
+			request.send();
+
+		};
+	</script>
 </head>
 
 <body>
 <div class="container-fluid my-4">
 	<header class="d-flex justify-content-between align-items-center mb-3">
 		<div>
-			<a href="">
+			<a href="./main.do">
 				<img class="brand-logo" src="./images/brand_logo.png">
 			</a>
 		</div>
 		<div class="d-flex">
-			<a href="" class="purchase quick-link">
+			<a href="./order.do" class="purchase quick-link">
 				<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 				<span class="cart-title">주문내역</span>
 			</a>
-			<a href="" class="cart quick-link">
+			<a href="./cartview.do" class="cart quick-link">
 				<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 				<span class="cart-title">장바구니</span>
 				<em class="cart-count" id="cart-counter">0</em>
 			</a>
 			<div class="login-btn-div">
-				<a class="btn btn-outline-dark login-btn" href="">로그인</a>
+				<a class="btn btn-outline-dark login-btn" href="./login.do">로그인</a>
 			</div>
 		</div>
 	</header>
@@ -45,68 +104,32 @@
 					<h5>상품 목록</h5>
 					<hr>
 				</div>
-				<ul class="list-group products">
-					<li class="list-group-item d-flex align-items-center">
-						<div>
-							<img class="product-img" src="./images/coffee_bean_01.png">
-						</div>
-						<div class="col">
-							<div class="text-muted">커피콩</div>
-							<div>Columbia Nariñó</div>
-						</div>
-						<div class="px-3 text-center">5,000원</div>
-						<div class="px-3 num-input-div">
-							<input type="text" class="num-input" value="1">
-							<div class="num-btn">
-								<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-								<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-							</div>
-						</div>
-						<div class="text-end">
-							<button class="btn btn-outline-dark" onclick="createToastMsg(1)">담기</button>
-						</div>
-					</li>
-					<li class="list-group-item d-flex align-items-center">
-						<div>
-							<img class="product-img" src="./images/coffee_bean_01.png">
-						</div>
-						<div class="col">
-							<div class="text-muted">커피콩</div>
-							<div>Columbia Nariñó</div>
-						</div>
-						<div class="px-3 text-center">5,000원</div>
-						<div class="px-3 num-input-div">
-							<input type="text" class="num-input" value="1">
-							<div class="num-btn">
-								<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-								<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-							</div>
-						</div>
-						<div class="text-end">
-							<button class="btn btn-outline-dark" onclick="createToastMsg(2)">담기</button>
-						</div>
-					</li>
-					<li class="list-group-item d-flex align-items-center">
-						<div>
-							<img class="product-img" src="./images/coffee_bean_01.png">
-						</div>
-						<div class="col">
-							<div class="text-muted">커피콩</div>
-							<div>Columbia Nariñó</div>
-						</div>
-						<div class="px-3 text-center">5,000원</div>
-						<div class="px-3 num-input-div">
-							<input type="text" class="num-input" value="1">
-							<div class="num-btn">
-								<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->
-								<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->
-							</div>
-						</div>
-						<div class="text-end">
-							<button class="btn btn-outline-dark" onclick="createToastMsg(3)">담기</button>
-						</div>
-					</li>
+				<ul class="list-group products" id="result">
 				</ul>
+
+<%--				<ul class="list-group products">--%>
+<%--					<li class="list-group-item d-flex align-items-center">--%>
+<%--						<div>--%>
+<%--							<img class="product-img" src="./images/coffee_bean_01.png">--%>
+<%--						</div>--%>
+<%--						<div class="col">--%>
+<%--							<div class="text-muted">커피콩</div>--%>
+<%--							<div>Columbia Nariñó</div>--%>
+<%--						</div>--%>
+<%--						<div class="px-3 text-center">5,000원</div>--%>
+<%--						<div class="px-3 num-input-div">--%>
+<%--							<input type="text" class="num-input" value="1">--%>
+<%--							<div class="num-btn">--%>
+<%--								<button class="inc" onclick="updateValue(this,1)" /> <!-- Up Arrow -->--%>
+<%--								<button class="dec" onclick="updateValue(this,-1)" /> <!-- Down Arrow -->--%>
+<%--							</div>--%>
+<%--						</div>--%>
+<%--						<div class="text-end">--%>
+<%--							<button class="btn btn-outline-dark" onclick="createToastMsg(1)">담기</button>--%>
+<%--						</div>--%>
+<%--					</li>--%>
+<%--				</ul>--%>
+
 			</div>
 		</div>
 	</main>
@@ -131,13 +154,44 @@
 		});
 	});
 
-	function createToastMsg(msg) {
-		console.log(msg)
+	function cartIn(msg, pid) {
+		// console.log("msg : " + msg)
+		// pid : 상품 코드 (number)
+		// console.log("pid : " + pid + typeof pid)
+
+		// 상품 갯수 입력 필드
+		const inputElement = document.getElementById(msg);
+		// console.log("inputElement : " + inputElement)
+
+		// 상품 갯수 ( String )
+		const inputNum = inputElement ? inputElement.value : 0;
+		// console.log("inputNum : " + inputNum + typeof inputNum)
+
+		const request = new XMLHttpRequest();
+		request.onreadystatechange = function () {
+			if ( request.readyState == 4 ) {
+				if ( request.status == 200 ) {
+					// 정상처리
+					const jsonData = JSON.parse( request.responseText.trim());
+
+					document.getElementById("cart-counter").textContent = jsonData.cartCount;
+
+				} else {
+					alert("[에러] 페이지 오류(404, 500)")
+				}
+			}
+		}
+		request.open( "POST", "/api/cart", true );
+
+		request.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+
+		request.send( 'pid='+ pid +'&num=' + inputNum );
+
+		// 팝업창 기능 (신경 x)
 		const toast = document.createElement("div");
 		toast.classList.add("toast-msg");
 		toast.classList.add("hide");
-		toast.textContent = msg + ' : 토스트 메세지 확인';
-		console.log(msg + ' 3')
+		toast.textContent = msg + ' : 장바구니에 담겼습니다.';
 
 		// 토스트 컨테이너에 추가
 		const toastContainer = document.getElementById("toast-container");

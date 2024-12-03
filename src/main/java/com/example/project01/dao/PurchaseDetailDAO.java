@@ -11,18 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 
 @Repository
-public class CoffeeDAO {
+public class PurchaseDetailDAO {
 
-    @Autowired
-    CustomerMapper customerMapper;
-    @Autowired
-    ProductMapper productMapper;
-    @Autowired
-    PurchaseMapper purchaseMapper;
     @Autowired
     PurchaseDetailMapper purchaseDetailMapper;
 
-    public ArrayList<ProductTO> productAll(){
-        return productMapper.productList();
-    }
 }

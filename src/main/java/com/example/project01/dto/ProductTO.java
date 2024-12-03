@@ -17,4 +17,7 @@ public class ProductTO {
     private String cat;
     private String stk;
     private String price;
+
+    // 장바구니용
+    private int pickNum;
 }

@@ -1,20 +1,17 @@
 package com.example.project01.controller;
 
-import com.example.project01.dao.CoffeeDAO;
-import com.example.project01.dto.ProductTO;
+import com.example.project01.dao.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
 
 @Controller
 //@RequestMapping( "/web")
 public class CoffeeWebController {
 
     @Autowired
-    CoffeeDAO coffeeDAO;
+    ProductDAO productDAO;
 
     // 회원가입
     @RequestMapping("/join.do")

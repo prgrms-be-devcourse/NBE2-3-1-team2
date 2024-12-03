@@ -56,12 +56,6 @@
 	<title>Grids & Circle</title>
 	<script type="text/javascript">
 
-		window.onload = function() {
-
-
-
-		};
-
 	</script>
 </head>
 
