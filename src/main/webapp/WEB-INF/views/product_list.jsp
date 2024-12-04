@@ -119,6 +119,7 @@
 		console.log(`\${button}`)
 		console.log(`ProductID: \${productID} ProductName: \${productName}`);
 
+		// ----------------- toastMSG 생성 ---------------------------------------------------------
 		// Toast 메시지 생성
 		const toast = document.createElement("div");
 
@@ -159,7 +160,7 @@
 		initCart();
 	}
 
-	// 페이지 로드시, 장바구니 아이콘에 숫자 보이게 하기
+	// -------------- 페이지 로드시, 장바구니 아이콘에 숫자 보이게 하기
 	function initCart(){
 		// 장바구니에 표시
 		let existingCart = JSON.parse(localStorage.getItem("cart")) || {};
