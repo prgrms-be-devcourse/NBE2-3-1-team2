@@ -102,12 +102,23 @@
 				if (this.readyState == 4) {
 					if (this.status == 200) {
 						jsonData = JSON.parse(request.responseText.trim());
-						let result = ``;
-						jsonData.forEach(list => {
-							// 특정 pid의 수량 가져오기
-							let quantity = existingCart[list.pid] || 1;
-							// 숫자 증감 localstorage 에 적용 data-product-id 넣기
-							result += `<li class="list-group-item d-flex align-items-center position-relative" data-product-id="\${list.pid}">
+						renderCart(jsonData, existingCart);
+						calculateTotal();
+					}
+				}
+			};
+			// 서버로 전송되는 데이터 형식(객체 배열)
+			request.send(JSON.stringify(productId));
+		};
+
+		// =============== 장바구니 아이템 렌더링 ================
+		function renderCart(jsonData, existingCart) {
+			let result = ``;
+			jsonData.forEach(list => {
+				// 특정 pid의 수량 가져오기
+				let quantity = existingCart[list.pid] || 1;
+				// 숫자 증감 localstorage 에 적용 data-product-id 넣기
+				result += `<li class="list-group-item d-flex align-items-center position-relative" data-product-id="\${list.pid}">
 							<div>
 								<img class="product-img" src="./images/\${list.img}">
 							</div>
@@ -126,38 +137,28 @@
 								<a class="delete-btn" href="">X</a>
 							</div>
 						</li>`;
-						});
-						document.querySelector('.products').innerHTML = result;
-						// console.log(jsonData);
+			});
+			document.querySelector('.products').innerHTML = result;
+			// console.log(jsonData);
 
-						// 총 금액 계산
-						calculateTotal();
+			// 수량 입력 필드의 직접 변경 이벤트 처리
+			document.querySelectorAll('.num-input').forEach(input => {
+				input.addEventListener('input', function () {
+					const button = this.closest('.num-input-div').querySelector('.inc');
+					updateCart(button, 0); // 변경만 적용
+				});
+			});
 
-						// 수량 입력 필드의 직접 변경 이벤트 처리
-						document.querySelectorAll('.num-input').forEach(input => {
-							input.addEventListener('input', function () {
-								const button = this.closest('.num-input-div').querySelector('.inc');
-								updateCart(button, 0); // 변경만 적용
-							});
-						});
+			// 삭제 버튼 동작 처리
+			document.querySelectorAll('.delete-btn').forEach(button => {
+				button.addEventListener('click', function (e) {
+					e.preventDefault();
+					removeItemFromCart(this);
+				});
+			});
+		}
 
-
-						// 삭제 버튼 동작 처리
-						document.querySelectorAll('.delete-btn').forEach(button => {
-							button.addEventListener('click', function (e) {
-								e.preventDefault();
-								removeItemFromCart(this);
-							});
-						});
-					}
-				}
-			};
-			// 서버로 전송되는 데이터 형식(객체 배열)
-			request.send(JSON.stringify(productId));
-		};
-
-		// --------------------------------- 숫자 증가/감소 로직 ==> 입력시 처리(window.onload)
-		// localstorage 적용
+		// =============== 숫자 증가/감소 로직 ==> 입력시 처리(window.onload) ===============
 		function updateCart(button, change) {
 			const input = button.closest('.num-input-div').querySelector('.num-input');
 			const listItem = button.closest('.list-group-item');
@@ -181,7 +182,7 @@
 		}
 
 
-		// --------------------------- 상품 삭제 함수
+		// =============== 상품 삭제 함수 ===============
 		function removeItemFromCart(button) {
 			const listItem = button.closest('.list-group-item');
 			const productId = listItem.getAttribute('data-product-id');
@@ -207,7 +208,7 @@
 		}
 
 
-		// ------------------------------ 총 금액 계산 함수
+		// =============== 총 금액 계산 함수 ===============
 		function calculateTotal() {
 			let cart = JSON.parse(localStorage.getItem('cart')) || {};
 			totalAmount = 0;
@@ -218,7 +219,7 @@
 				}
 			});
 
-			// \${totalAmount.toLocaleString()}원 : 이 부분에서 \ 넣어야지 동작함
+			// \${totalAmount.toLocaleString()}원 : 이 부분에서 \ 넣어야지 동작함 ????
 			document.getElementById('total-price').textContent = `\${totalAmount.toLocaleString()}원`;
 			console.log(`Total Amount: \${totalAmount}`);
 		}
