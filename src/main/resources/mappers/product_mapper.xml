@@ -5,4 +5,10 @@
         select pid, img, name, cat, stk, price
         from product
     </select>
+
+    <select id="cart_list" resultType="product" parameterType="product">
+        select pid, img, name, cat, stk, price
+        from product
+        where pid = #{pid}
+    </select>
 </mapper>

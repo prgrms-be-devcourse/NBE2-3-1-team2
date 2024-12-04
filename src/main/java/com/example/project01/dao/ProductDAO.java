@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProductDAO {
@@ -15,5 +16,14 @@ public class ProductDAO {
 
     public ArrayList<ProductTO> productList(){
         return productMapper.product_list();
+    }
+
+    public ArrayList<ProductTO> cartList(List<ProductTO> pids) {
+        // return list
+        ArrayList<ProductTO> to = new ArrayList<>();
+        // (pids 받아와서) mapper 인자로 넣음
+        pids.forEach(p -> to.add(productMapper.cart_list(p)));
+
+        return to;
     }
 }

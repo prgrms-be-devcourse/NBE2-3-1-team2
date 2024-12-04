@@ -12,25 +12,22 @@ import java.util.ArrayList;
 @Controller
 public class CoffeeWebController {
 
-    @Autowired
-    private ProductDAO productDAO;
+    //@Autowired
+    //private ProductDAO productDAO;
 
     @RequestMapping("main.do")
-    public String main(Model model) {
-
-        ArrayList<ProductTO> lists = productDAO.productList();
-        model.addAttribute("lists", lists);
+    public String main() {
         return "product_list";
-    }
-
-    @RequestMapping("order.do")
-    public String order() {
-        return "purchase_history";
     }
 
     @RequestMapping("cartview.do")
     public String cartview() {
         return "shopping_cart";
+    }
+
+    @RequestMapping("order.do")
+    public String order() {
+        return "purchase_history";
     }
 
     @RequestMapping("login.do")

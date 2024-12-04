@@ -19,22 +19,22 @@
 <div class="container-fluid my-4">
 	<header class="d-flex justify-content-between align-items-center mb-3">
 		<div>
-			<a href="">
+			<a href="/main.do">
 				<img class="brand-logo" src="./images/brand_logo.png">
 			</a>
 		</div>
 		<div class="d-flex">
-			<a href="" class="purchase quick-link">
+			<a href="/order.do" class="purchase quick-link">
 				<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 				<span class="cart-title">주문내역</span>
 			</a>
-			<a href="" class="cart quick-link">
+			<a href="/cartview.do" class="cart quick-link">
 				<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 				<span class="cart-title">장바구니</span>
 				<em class="cart-count" id="cart-counter"></em>
 			</a>
 			<div class="login-btn-div">
-				<a class="btn btn-outline-dark login-btn" href="">로그인</a>
+				<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
 			</div>
 		</div>
 	</header>
@@ -86,11 +86,8 @@
 									<button class="btn btn-outline-dark" onclick="createToastMsg(this, '\${list.pid}', '\${list.name}')">담기</button>
 								</div>
 							</li>`;
-						//console.log(list.name);
-						//console.log(list.pid);
 						console.log(list)
 					}
-
 					// HTML 결과 삽입
 					document.getElementById("productList").innerHTML = result;
 					console.log(jsonData);
@@ -99,7 +96,6 @@
 				}
 			}
 		};
-
 		// 서버로 요청 전송
 		request.open("GET", "/api/product", true);
 		request.send();
