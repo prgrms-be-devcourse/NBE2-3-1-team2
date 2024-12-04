@@ -9,20 +9,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProductDAO {
 
     @Autowired
-    CustomerMapper customerMapper;
-    @Autowired
     ProductMapper productMapper;
-    @Autowired
-    PurchaseMapper purchaseMapper;
-    @Autowired
-    PurchaseDetailMapper purchaseDetailMapper;
 
     public ArrayList<ProductTO> productAll(){
         return productMapper.productList();
+    }
+    public ArrayList<ProductTO> findProduct(List<Integer> pidList) {
+
+        ArrayList<ProductTO> findList = new ArrayList<>();
+        for( int pid : pidList ) {
+            ProductTO to = productMapper.findProduct(pid);
+            findList.add(to);
+        }
+
+        return findList;
     }
 }

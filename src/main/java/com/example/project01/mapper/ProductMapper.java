@@ -9,4 +9,5 @@ import java.util.ArrayList;
 public interface ProductMapper {
 
     ArrayList<ProductTO> productList();
+    ProductTO findProduct(int pid);
 }

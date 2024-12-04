@@ -18,6 +18,6 @@ public class ProductTO {
     private String stk;
     private String price;
 
-    // 장바구니용
-    private int pickNum;
+    // session 장바구니용(사용 보류)
+    // private int pickNum;
 }

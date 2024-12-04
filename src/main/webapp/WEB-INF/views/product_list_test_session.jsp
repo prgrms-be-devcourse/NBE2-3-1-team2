@@ -26,50 +26,37 @@
 						// json 형태로 출력
 						const jsonData = JSON.parse( request.responseText.trim());
 
-						// localStorage 데이터를 Json으로 가져오기 ( 스토리지에 데이터가 있으면, 있는 걸로 진행 )
-						const storedArray = JSON.parse(localStorage.getItem("items")) || [];
-						if( storedArray.length > 0 ) {
-							document.getElementById("cart-counter").textContent = storedArray.length;
-						}
+						// 정상 출력 확인
+						// console.log(jsonData);
 
 						// 제품 리스트 구성
 						let result = '';
 						for ( let i=0; i < jsonData.length; i++ ) {
 
 							let jData = jsonData[i];
-							let pid = jData.pid;
-							let img = jData.img;
-							let cat = jData.cat;
-							let name = jData.name;
-							let price = parseInt(jData.price, 10);
-							let value = "1";
 
-							const pidItem = storedArray.find(item => item.key === Number(pid));
-							if( pidItem ) {
-								value = pidItem.number;
-							}
-
-							result += '<li class="list-group-item d-flex align-items-center">' +
-										'<div>' +
-										'<img class="product-img" src="./images/'+ img +'">' +
-										'</div>' +
-										'<div class="col">' +
-										'<div class="text-muted">' + cat + '</div>' +
-										'<div>' + name + '</div>' +
-										'</div>' +
-										// '<div class="px-3 text-center">' + jData.price +'원</div>' +
-										'<div class="px-3 text-center">' + price +'원</div>' +
-										'<div class="px-3 num-input-div">' +
-										'<input type="text" class="num-input" id="input-' + pid + '" value="'+ value +'">' +
-										'<div class="num-btn">' +
-										'<button class="inc" onclick="updateValue(this,1)"/>' +
-										'<button class="dec" onclick="updateValue(this,-1)"/>' +
-										'</div>' +
-										'</div>' +
-										'<div class="text-end">' +
-										'<button class="btn btn-outline-dark" onclick="cartIn(\'input-' + pid + '\', ' + pid + ',' + price + ')">담기</button>' +
-										'</div>' +
-										'</li>';
+							result += '<li class="list-group-item d-flex align-items-center">';
+							result += '<div>';
+							result += '<img class="product-img" src="./images/'+ jData.img +'">';
+							result += '</div>'
+							result += '<div class="col">';
+							result += '<div class="text-muted">' + jData.cat + '</div>';
+							result += '<div>' + jData.name + '</div>';
+							result += '</div>';
+							result += '<div class="px-3 text-center">' + jData.price +'원</div>';
+							result += '<div class="px-3 num-input-div">';
+							result += '<input type="text" class="num-input" id="input-' + jData.pid + '" value="1">';
+							// result += '<input type="hidden" class="product_pid" id="pid" value="' + jData.pid + '">';
+							result += '<div class="num-btn">';
+							result += '<button class="inc" onclick="updateValue(this,1)"/>';
+							result += '<button class="dec" onclick="updateValue(this,-1)"/>';
+							result += '</div>'
+							result += '</div>'
+							result += '<div class="text-end">';
+							// result += '<button class="btn btn-outline-dark" onclick="cartIn(this, ${jData.pid})">담기</button>';
+							result += '<button class="btn btn-outline-dark" onclick="cartIn(\'input-' + jData.pid + '\', ' + jData.pid + ')">담기</button>';
+							result += '</div>';
+							result += '</li>';
 						}
 
 						document.getElementById('result').innerHTML = result;
@@ -117,7 +104,6 @@
 					<h5>상품 목록</h5>
 					<hr>
 				</div>
-
 				<ul class="list-group products" id="result">
 				</ul>
 
@@ -145,43 +131,38 @@
 		});
 	});
 
-	function cartIn(msg, pid, unitPrice) {
+	function cartIn(msg, pid) {
+		// console.log("msg : " + msg)
+		// pid : 상품 코드 (number)
+		// console.log("pid : " + pid + typeof pid)
 
 		// 상품 갯수 입력 필드
 		const inputElement = document.getElementById(msg);
+		// console.log("inputElement : " + inputElement)
 
 		// 상품 갯수 ( String )
 		const inputNum = inputElement ? inputElement.value : 0;
+		// console.log("inputNum : " + inputNum + typeof inputNum)
 
-		console.log(typeof inputNum);
+		const request = new XMLHttpRequest();
+		request.onreadystatechange = function () {
+			if ( request.readyState == 4 ) {
+				if ( request.status == 200 ) {
+					// 정상처리
+					const jsonData = JSON.parse( request.responseText.trim());
 
-		if( inputNum === 0 || inputNum == null ){
-			alert('상품 개수를 입력하시기 바랍니다.')
-			return false;
+					document.getElementById("cart-counter").textContent = jsonData.cartCount;
+
+				} else {
+					alert("[에러] 페이지 오류(404, 500)")
+				}
+			}
 		}
+		request.open( "POST", "/api/cart", true );
 
-		const storedArray = JSON.parse(localStorage.getItem("items")) || [];
-		const pidArray = JSON.parse(localStorage.getItem("pidArray")) || []
+		request.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
 
-		const pidItem = storedArray.find(item => item.key === pid);
-
-		if (pidItem) {
-			// 이미 존재하는 경우 -> 값을 업데이트
-			pidItem.number = inputNum;
-			pidItem.totalPrice = unitPrice * inputNum;
-
-		} else {
-			// 존재하지 않는 경우 -> 새로 추가
-			let tPrice = unitPrice * inputNum;
-			storedArray.push({ key: pid, number: inputNum, unitPrice: unitPrice ,totalPrice : tPrice });
-			pidArray.push(pid);
-		}
-
-		// 변경된 데이터 localStorage에 저장
-		localStorage.setItem("items", JSON.stringify(storedArray));
-		localStorage.setItem("pidArray", JSON.stringify(pidArray));
-		// 선택 상품 갯수 표기
-		document.getElementById("cart-counter").textContent = storedArray.length;
+		request.send( 'pid='+ pid +'&num=' + inputNum );
 
 		// 팝업창 기능 (신경 x)
 		const toast = document.createElement("div");

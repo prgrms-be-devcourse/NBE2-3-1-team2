@@ -8,6 +8,12 @@
         from product
     </select>
 
+    <select id="findProduct" resultType="product">
+        select pid, img, name, cat, stk, price
+        from product
+        where pid=#{pid};
+    </select>
+
     <insert id="productInsert">
         INSERT INTO product (img, name, cat, stk, price)
         VALUES (#{img}, #{name}, #{cat}, #{stk}, #{price});
