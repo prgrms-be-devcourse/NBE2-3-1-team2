@@ -52,7 +52,7 @@
 							<hr>
 							<div class="d-flex justify-content-between mt-2">
 								<span>총 금액</span>
-								<span>50,000원</span>
+								<span id="total-price"></span>
 							</div>
 							<hr>
 							<form action="" method="">
@@ -80,6 +80,8 @@
 	</div>
 
 	<script type="text/javascript">
+		var jsonData = [];
+		let totalPrice = 0;
 		window.onload = function () {
 			//localstorage 에서 pid 받아오기
 			let existingCart = JSON.parse(localStorage.getItem('cart')) || {}; // localStorage에서 값 가져오기
@@ -99,7 +101,7 @@
 			request.onreadystatechange = function () {
 				if (this.readyState == 4) {
 					if (this.status == 200) {
-						const jsonData = JSON.parse(request.responseText.trim());
+						jsonData = JSON.parse(request.responseText.trim());
 						let result = ``;
 						jsonData.forEach(list => {
 							// 특정 pid의 수량 가져오기
@@ -115,8 +117,8 @@
 							</div>
 							<div class="px-3 text-center">\${list.price}</div>
 							<div class="px-3 num-input-div">
+								<!-- quantity 적용 -->
 								<input type="text" class="num-input" value="\${quantity}"/>
-
 									<div class="num-btn">
 										<button class="inc" onclick="updateCart(this,1)" /> <!-- Up Arrow -->
 										<button class="dec" onclick="updateCart(this,-1)" /> <!-- Down Arrow -->
@@ -126,8 +128,21 @@
 						</li>`;
 						});
 						document.querySelector('.products').innerHTML = result;
-						console.log(jsonData);
+						// console.log(jsonData);
 
+						// 총 금액 계산
+						calculateTotal();
+
+						// 수량 입력 필드의 직접 변경 이벤트 처리
+						document.querySelectorAll('.num-input').forEach(input => {
+							input.addEventListener('input', function () {
+								const button = this.closest('.num-input-div').querySelector('.inc');
+								updateCart(button, 0); // 변경만 적용
+							});
+						});
+
+
+						// 삭제 버튼 동작 처리
 						document.querySelectorAll('.delete-btn').forEach(button => {
 							button.addEventListener('click', function (e) {
 								e.preventDefault();
@@ -141,7 +156,7 @@
 			request.send(JSON.stringify(productId));
 		};
 
-		// --------------------------------- 숫자 증가/감소 로직 ==> 입력시 처리
+		// --------------------------------- 숫자 증가/감소 로직 ==> 입력시 처리(window.onload)
 		// localstorage 적용
 		function updateCart(button, change) {
 			const input = button.closest('.num-input-div').querySelector('.num-input');
@@ -160,15 +175,11 @@
 			localStorage.setItem('cart', JSON.stringify(cart)); // LocalStorage 저장
 
 			console.log(`Product ${productID} updated to quantity: ${curValue}`);
+
+			// 총 금액 다시 계산
+			calculateTotal();
 		}
 
-
-		// 숫자 이외의 값 입력 방지
-		document.querySelectorAll(".num-input").forEach(input => {
-			input.addEventListener("input", function () {
-				this.value = this.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 문자 제거
-			});
-		});
 
 		// --------------------------- 상품 삭제 함수
 		function removeItemFromCart(button) {
@@ -190,6 +201,26 @@
 			document.getElementById('cart-counter').innerHTML = updatedCount;
 
 			console.log(`Product ${productId} removed from cart`);
+
+			// 총 금액 다시 계산
+			calculateTotal();
+		}
+
+
+		// ------------------------------ 총 금액 계산 함수
+		function calculateTotal() {
+			let cart = JSON.parse(localStorage.getItem('cart')) || {};
+			totalAmount = 0;
+
+			jsonData.forEach(item => {
+				if (cart[item.pid]) {
+					totalAmount += item.price * cart[item.pid];
+				}
+			});
+
+			// \${totalAmount.toLocaleString()}원 : 이 부분에서 \ 넣어야지 동작함
+			document.getElementById('total-price').textContent = `\${totalAmount.toLocaleString()}원`;
+			console.log(`Total Amount: \${totalAmount}`);
 		}
 	</script>
 </body>
