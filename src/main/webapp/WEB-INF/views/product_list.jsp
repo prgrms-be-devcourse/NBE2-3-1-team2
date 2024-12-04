@@ -135,11 +135,10 @@
 			setTimeout(() => toast.remove(), 500);
 		}, 2000);
 
-		// 쿠키 처리
+		/* // ----------------- 쿠키 처리 -------------------------------------------------------
 		let cookies = document.cookie.split('; ');
 		let existingcount = 0;
 
-		// ------------ 쿠키 존재하는 경우, 누적해서 계산 ** --------
 		let count = parseInt(
 				inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value
 		) || 0;
@@ -150,14 +149,33 @@
 				existingcount = parseInt(value) || 0;
 			}
 		});
-		// -----------------------------------------------------------
 
 		// 새 값 계산
 		let totalProduct = existingcount + count;
 
 		let date = new Date();
 		date.setTime(date.getTime() + 60*1000);
-		document.cookie = `\${productID}` + '=' + totalProduct + ';expires=' + date.toUTCString() + ';path=/';
+		document.cookie = `\${productID}` + '=' + totalProduct + ';expires=' + date.toUTCString() + ';path=/';*/
+
+		// ----------------- localStorage 처리 -------------------------------------------------------
+		// localStorage 처리
+		let existingCart = JSON.parse(localStorage.getItem("cart")) || {}; // 기존 장바구니 데이터 가져오기
+		let count = parseInt(
+				inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value
+		) || 0;
+
+		// 기존 값이 있다면 추가, 없다면 새로운 값으로 설정
+		if (existingCart[productID]) {
+			existingCart[productID] += count;
+		} else {
+			existingCart[productID] = count;
+		}
+
+		// localStorage에 업데이트된 데이터 저장
+		localStorage.setItem("cart", JSON.stringify(existingCart));
+		console.log("Updated Cart:", existingCart);
+		// ** 수량 입력 필드 초기화 **
+		inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value = 1;
 	}
 </script>
 
