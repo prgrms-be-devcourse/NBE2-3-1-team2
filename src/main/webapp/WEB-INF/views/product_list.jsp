@@ -31,7 +31,7 @@
 			<a href="" class="cart quick-link">
 				<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 				<span class="cart-title">장바구니</span>
-				<em class="cart-count" id="cart-counter">0</em>
+				<em class="cart-count" id="cart-counter"></em>
 			</a>
 			<div class="login-btn-div">
 				<a class="btn btn-outline-dark login-btn" href="">로그인</a>
@@ -56,6 +56,7 @@
 
 <script type="text/javascript">
 	window.onload = function () {
+		initCart(); // onload 되자마자 localstorage 값을 장바구니에 보이게 해야함
 		document.getElementById("productList").innerHTML = ""; // 기존 내용 초기화
 		const request = new XMLHttpRequest();
 		request.onreadystatechange = function () {
@@ -63,7 +64,6 @@
 				if (request.status === 200) {
 					const jsonData = JSON.parse(request.responseText.trim()); // JSON 파싱
 					let result = ``;
-
 					for (let i = 0; i < jsonData.length; i++) {
 						const list = jsonData[i];
 						result += `<li class="list-group-item d-flex align-items-center">
@@ -136,29 +136,7 @@
 			setTimeout(() => toast.remove(), 500);
 		}, 2000);
 
-		/* // ----------------- 쿠키 처리 -------------------------------------------------------
-		let cookies = document.cookie.split('; ');
-		let existingcount = 0;
-
-		let count = parseInt(
-				button.closest('.list-group-item').querySelector('.num-input-div .num-input').value
-		) || 0;
-
-		cookies.forEach(cookie => {
-			let [key, value] = cookie.split('=');
-			if (key === productID) {
-				existingcount = parseInt(value) || 0;
-			}
-		});
-
-		// 새 값 계산
-		let totalProduct = existingcount + count;
-
-		let date = new Date();
-		date.setTime(date.getTime() + 60*1000);
-		document.cookie = `\${productID}` + '=' + totalProduct + ';expires=' + date.toUTCString() + ';path=/';*/
-
-		// ----------------- localStorage 처리 -------------------------------------------------------
+		// -------------------- localStorage 처리 -------------------------------------------------------
 		// localStorage 처리
 		let existingCart = JSON.parse(localStorage.getItem("cart")) || {}; // 기존 장바구니 데이터 가져오기
 		let count = parseInt(
@@ -177,7 +155,18 @@
 		console.log("Updated Cart:", existingCart);
 		// ** 수량 입력 필드 초기화 **
 		button.closest('.list-group-item').querySelector('.num-input-div .num-input').value = 1;
+
+		initCart();
 	}
+
+	// 페이지 로드시, 장바구니 아이콘에 숫자 보이게 하기
+	function initCart(){
+		// 장바구니에 표시
+		let existingCart = JSON.parse(localStorage.getItem("cart")) || {};
+		let productCount = Object.keys(existingCart).length;
+		document.getElementById("cart-counter").textContent = productCount;
+	}
+
 </script>
 
 </body>
