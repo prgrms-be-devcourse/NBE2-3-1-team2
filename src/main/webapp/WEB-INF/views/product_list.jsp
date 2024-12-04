@@ -115,7 +115,8 @@
 	}
 
 	// 토스트 메시지 생성 및 쿠키 처리
-	function createToastMsg(inputNum, productID, productName) {
+	function createToastMsg(button, productID, productName) {
+		console.log(`\${button}`)
 		console.log(`ProductID: \${productID} ProductName: \${productName}`);
 
 		// Toast 메시지 생성
@@ -140,7 +141,7 @@
 		let existingcount = 0;
 
 		let count = parseInt(
-				inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value
+				button.closest('.list-group-item').querySelector('.num-input-div .num-input').value
 		) || 0;
 
 		cookies.forEach(cookie => {
@@ -161,7 +162,7 @@
 		// localStorage 처리
 		let existingCart = JSON.parse(localStorage.getItem("cart")) || {}; // 기존 장바구니 데이터 가져오기
 		let count = parseInt(
-				inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value
+				button.closest('.list-group-item').querySelector('.num-input-div .num-input').value
 		) || 0;
 
 		// 기존 값이 있다면 추가, 없다면 새로운 값으로 설정
@@ -175,7 +176,7 @@
 		localStorage.setItem("cart", JSON.stringify(existingCart));
 		console.log("Updated Cart:", existingCart);
 		// ** 수량 입력 필드 초기화 **
-		inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value = 1;
+		button.closest('.list-group-item').querySelector('.num-input-div .num-input').value = 1;
 	}
 </script>
 
