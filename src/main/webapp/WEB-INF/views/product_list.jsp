@@ -26,6 +26,7 @@
 						// json 형태로 출력
 						const jsonData = JSON.parse( request.responseText.trim());
 
+						// localStorage 여부에 따른 상품 개수 및 담긴 상품 종류 개수 동적 구현
 						// localStorage 데이터를 Json으로 가져오기 ( 스토리지에 데이터가 있으면, 있는 걸로 진행 )
 						const storedArray = JSON.parse(localStorage.getItem("items")) || [];
 						if( storedArray.length > 0 ) {
