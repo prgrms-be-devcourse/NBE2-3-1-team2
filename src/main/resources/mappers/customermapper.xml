@@ -7,4 +7,14 @@
         from customer
     </select>
 
+    <insert id="register" parameterType="customer">
+        insert into customer
+        values(0,  #{email}, password(#{pwd}), #{addr}, #{zip})
+    </insert>
+
+    <select id="emailCheck" parameterType="String">
+        select count(*) from customer where email=#{email}
+    </select>
+
+
 </mapper>

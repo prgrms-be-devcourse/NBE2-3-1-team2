@@ -9,7 +9,7 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 @Alias(value="customer")
-public class CustomerDTO {
+public class CustomerTO {
     private String cid;
     private String email;
     private String pwd;

@@ -1,6 +1,7 @@
 package com.example.project01.dao;
 
-import com.example.project01.mapper.CustormerMapper;
+import com.example.project01.dto.CustomerTO;
+import com.example.project01.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -8,10 +9,17 @@ import org.springframework.stereotype.Repository;
 public class CustomerDAO {
 
     @Autowired
-    private CustormerMapper custormerMapper;
+    private CustomerMapper custormerMapper;
 
-    public String login() {
 
-        return custormerMapper.login();
+    public int register(CustomerTO to) {
+        return custormerMapper.register(to);
     }
+
+    public boolean emailCheck (String email) {
+
+        return custormerMapper.emailCheck(email);
+    }
+
+
 }

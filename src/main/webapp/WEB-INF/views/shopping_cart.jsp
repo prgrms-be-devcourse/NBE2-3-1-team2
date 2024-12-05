@@ -1,4 +1,3 @@
-<%@ page import="com.example.project01.dto.ProductTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 
