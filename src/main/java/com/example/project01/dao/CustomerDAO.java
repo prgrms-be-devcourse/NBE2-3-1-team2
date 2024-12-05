@@ -17,7 +17,13 @@ public class CustomerDAO {
         return customerMapper.customer_register(customerTO);
     }
 
-    public boolean emailCheck(String email) {
-        return customerMapper.customer_emailCHK(email) > 0;
+    // 이메일 확인
+    public int emailCheck(String email) {
+        Integer result =  customerMapper.customer_emailCHK(email);
+        return result != null ? result : -1;
+    }
+
+    public boolean passwordCheck(CustomerTO customerTO) {
+        return customerMapper.customer_pwdCHK(customerTO) > 0;
     }
 }

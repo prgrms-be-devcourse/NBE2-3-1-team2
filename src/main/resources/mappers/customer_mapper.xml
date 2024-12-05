@@ -7,9 +7,16 @@
     </insert>
 
     <select id="customer_emailCHK" parameterType="register">
-        select count(*)
+        select coalesce(cid, -1)
         from customer
         where email=#{email};
     </select>
+
+    <select id="customer_pwdCHK" parameterType="register" resultType="int">
+        select count(*)
+        from customer
+        where email=#{email} and pwd = password(#{pwd});
+    </select>
+
 </mapper>
 

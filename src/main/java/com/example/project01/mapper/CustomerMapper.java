@@ -8,5 +8,6 @@ import java.util.ArrayList;
 @Mapper
 public interface CustomerMapper {
     int customer_register(CustomerTO customerTO);
-    int customer_emailCHK(String email);
+    Integer customer_emailCHK(String email);
+    int customer_pwdCHK(CustomerTO customerTO);
 }

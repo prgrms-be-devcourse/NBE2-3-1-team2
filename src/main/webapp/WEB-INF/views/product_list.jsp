@@ -13,6 +13,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		  integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<title>Grids & Circle</title>
+
 </head>
 
 <body>
@@ -53,11 +54,16 @@
 	<div id="toast-container">
 	</div>
 </div>
-
+<script src="/js/session.js"></script>
 <script type="text/javascript">
 	window.onload = function () {
 		initCart(); // onload 되자마자 localstorage 값을 장바구니에 보이게 해야함
 		document.getElementById("productList").innerHTML = ""; // 기존 내용 초기화
+
+		// session.js 함수 호출
+		checkSession();
+		setupLinks();
+
 		const request = new XMLHttpRequest();
 		request.onreadystatechange = function () {
 			if (request.readyState === 4) {
@@ -99,7 +105,7 @@
 		// 서버로 요청 전송
 		request.open("GET", "/api/product", true);
 		request.send();
-	};
+	}
 
 	// 숫자 증가/감소 로직
 	function updateValue(button, change) {

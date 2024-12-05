@@ -55,7 +55,7 @@
 								<span id="total-price"></span>
 							</div>
 							<hr>
-							<form action="" method="">
+							<form action="" method="post">
 								<div class="form-floating mb-2">
 									<input type="email" class="form-control" id="id-input" placeholder="name@example.com">
 									<label for="id-input">Email@Example.com</label>
@@ -79,10 +79,15 @@
 		</main>
 	</div>
 
+	<script src="/js/session.js"></script>
 	<script type="text/javascript">
 		var jsonData = [];
 		let totalPrice = 0;
 		window.onload = function () {
+
+			checkSession();
+			setupLinks();
+
 			//localstorage 에서 pid 받아오기
 			let existingCart = JSON.parse(localStorage.getItem('cart')) || {}; // localStorage에서 값 가져오기
 			//장바구니 아이콘에 표시하기
