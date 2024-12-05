@@ -15,10 +15,18 @@ public class CustomerDAO {
     }
 
     public boolean loginAuth(CustomerTO customer) {
-        return customerMapper.authAccount(customer) >= 1;
+        return customerMapper.authAccount(customer) > 0;
     }
 
     public CustomerTO getCustomerByEmail(String email) {
         return customerMapper.selectByEmail(email);
+    }
+
+    public boolean CheckCustomerByEmail(String email) {
+        return customerMapper.selectByEmail(email) != null;
+    }
+
+    public boolean addCustomer(CustomerTO customer) {
+        return customerMapper.insertCustomer(customer) > 0;
     }
 }

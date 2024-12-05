@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +81,41 @@ public class CoffeeCustomerAPIController {
             respMap.put("success", false);
             respMap.put("message", "세션 정보가 만료되었습니다. 로그인을 다시 하시기 바랍니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respMap);
+        }
+    }
+
+    @PostMapping("customer/join")
+    public ResponseEntity<Map<String, Object>> joinCustomer(@RequestBody CustomerTO customer) {
+        Map<String, Object> respMap = new HashMap<>();
+        boolean check;
+
+        try {
+            check = customerDAO.addCustomer(customer);
+        } catch (Exception ignored) {
+            check = false;
+        }
+        if (check) {
+            respMap.put("success", check);
+            return ResponseEntity.ok(respMap);
+        } else {
+            respMap.put("success", check);
+            respMap.put("message", "이메일이 중복되었습니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(respMap);
+        }
+    }
+    @PostMapping("customer/join/email")
+    public ResponseEntity<Map<String, Object>> joinDuplicate(@RequestBody Map<String, String> request) {
+        Map<String, Object> respMap = new HashMap<>();
+        boolean duplicate = customerDAO.CheckCustomerByEmail(request.get("email"));
+
+        if (duplicate) {
+            respMap.put("success", false);
+            respMap.put("message", "이메일이 중복되었습니다");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(respMap);
+        } else {
+            respMap.put("success", true);
+            return ResponseEntity.ok(respMap);
+            
         }
     }
 }

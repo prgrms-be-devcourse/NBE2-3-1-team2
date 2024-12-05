@@ -63,7 +63,7 @@
             </div>
 
             <div class="form-floating mb-5">
-                <input type="text" class="form-control" id="zipcode-input" placeholder="00000">
+                <input type="text" class="form-control" id="zipcode-input" placeholder="00000" maxlength="5">
                 <label for="zipcode-input">Zip Code</label>
             </div>
 
