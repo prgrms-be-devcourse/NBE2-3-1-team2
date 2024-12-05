@@ -17,12 +17,47 @@
 	<title>Grids & Circle</title>
 
 	<script type="text/javascript" >
-		window.onload = function () {
+		window.onload = function () {fetch("/emp/loginStatus")
+				.then(response => response.json())
+				.then(data => {
+					const loginStatusDiv = document.getElementById("loginStatus");
+					if (data.isLoggedIn) {
+						loginStatusDiv.innerHTML = `<a href="/emp/logout" class="btn btn-outline-dark">로그아웃</a>`;
+					} else {
+						loginStatusDiv.innerHTML = `<a href="login.do" class="btn btn-outline-dark">로그인</a>`;
+					}
+
+					const cartLink = document.querySelector("#cart");
+					const orderLink = document.querySelector("#history");
+
+					if (cartLink) {
+						cartLink.addEventListener("click", function (event) {
+							if (!data.isLoggedIn) {
+								event.preventDefault();  // 페이지 이동을 막음
+								alert("로그인 후 이용 가능합니다.");
+							}
+						});
+					}
+
+					// 주문 내역 클릭 시 로그인 상태 확인
+					if (orderLink) {
+						orderLink.addEventListener("click", function (event) {
+							if (!data.isLoggedIn) {
+								event.preventDefault();  // 페이지 이동을 막음
+								alert("로그인 후 이용 가능합니다.");
+							}
+						});
+					}
+				})
+				.catch(error => console.error('Error fetching login status:', error));
+
+
 			const request = new XMLHttpRequest();
 			request.onreadystatechange = function() {
 				if (request.readyState === 4) { // 요청이 완료된 경우
 					if (request.status === 200) { // 성공적인 응답인 경우
 						try {
+
 							const jsonData = JSON.parse(request.responseText.trim());
 							let result = '';
 							for(let i = 0 ; i < jsonData.length ; i++){
@@ -50,12 +85,13 @@
 							}
 
 							document.getElementById('product-list').innerHTML = result;
-							updateCartCount()
+							updateCartCount();
 
 						} catch (error) {
 							console.error("JSON 파싱 오류:", error);
 							console.error("서버 응답:", request.responseText);
 						}
+
 					} else {
 						console.error("서버 요청 실패:", request.status, request.statusText);
 					}
@@ -65,7 +101,6 @@
 			request.open( "GET", "/emp/json", true );
 			request.send();
 		};
-
 	</script>
 </head>
 
@@ -78,16 +113,16 @@
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="order.do" class="purchase quick-link">
+				<a href="order.do" class="purchase quick-link" id="history">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="cart.do" class="cart quick-link">
+				<a href="cart.do" class="cart quick-link" id="cart">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
-				<div class="login-btn-div">
+				<div class="login-btn-div" id="loginStatus">
 					<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>
 				</div>
 			</div>
@@ -111,6 +146,7 @@
 	</div>
 
 	<script>
+
 		// 숫자 증가/감소 로직
 		function updateValue(button, change) {
 			const input = button.closest('.num-input-div').querySelector('.num-input');

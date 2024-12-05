@@ -22,6 +22,42 @@
 			if (error === 'emailExists') {
 				document.getElementById('error-message').style.display = 'inline'; // 오류 메시지 표시
 			}
+
+			fetch("/emp/loginStatus")
+					.then(response => response.json())
+					.then(data => {
+						const loginStatusDiv = document.getElementById("loginStatus");
+						if (data.isLoggedIn) {
+							loginStatusDiv.innerHTML = `<a href="/emp/logout" class="btn btn-outline-dark">로그아웃</a>`;
+						} else {
+							loginStatusDiv.innerHTML = `<a href="login.do" class="btn btn-outline-dark">로그인</a>`;
+						}
+
+						const cartLink = document.querySelector("#cart");
+						const orderLink = document.querySelector("#history");
+
+						if (cartLink) {
+							cartLink.addEventListener("click", function (event) {
+								if (!data.isLoggedIn) {
+									event.preventDefault();  // 페이지 이동을 막음
+									alert("로그인 후 이용 가능합니다.");
+								}
+							});
+						}
+
+						// 주문 내역 클릭 시 로그인 상태 확인
+						if (orderLink) {
+							orderLink.addEventListener("click", function (event) {
+								if (!data.isLoggedIn) {
+									event.preventDefault();  // 페이지 이동을 막음
+									alert("로그인 후 이용 가능합니다.");
+								}
+							});
+						}
+					})
+					.catch(error => console.error('Error fetching login status:', error));
+
+			updateCartCount();
 		};
 	</script>
 </head>
@@ -36,17 +72,17 @@
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="order.do" class="purchase quick-link">
+				<a href="order.do" class="purchase quick-link" id="history">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="cart.do" class="cart quick-link">
+				<a href="cart.do" class="cart quick-link" id="cart">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
-				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>
+				<div class="login-btn-div" id="loginStatus">
+					<a class="btn btn-outline-dark login-btn" href="login.do" >로그인</a>
 				</div>
 			</div>
 		</header>
@@ -125,6 +161,14 @@
 
 			document.rfrm.submit();
 		};
+
+		function updateCartCount() {
+			// localStorage에서 'cart'를 가져와서 총 카운트 계산
+			const cart = localStorage.getItem('cart');
+			const cartCount = cart ? parseInt(JSON.parse(cart).length, 10) : 0;
+			document.getElementById('cart-counter').textContent = cartCount;
+			// 여기에서 UI 업데이트를 추가할 수 있습니다.
+		}
 	</script>
 </body>
 

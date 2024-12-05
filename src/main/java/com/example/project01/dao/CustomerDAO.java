@@ -11,6 +11,10 @@ public class CustomerDAO {
     @Autowired
     private CustomerMapper custormerMapper;
 
+    public boolean login(CustomerTO to) {
+        return custormerMapper.login(to);
+    }
+
 
     public int register(CustomerTO to) {
         return custormerMapper.register(to);

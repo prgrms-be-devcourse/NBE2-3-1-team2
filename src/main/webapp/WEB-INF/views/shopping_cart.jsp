@@ -17,6 +17,40 @@
 
 	<script type="text/javascript">
 		window.onload = function () {
+			fetch("/emp/loginStatus")
+					.then(response => response.json())
+					.then(data => {
+						const loginStatusDiv = document.getElementById("loginStatus");
+						if (data.isLoggedIn) {
+							loginStatusDiv.innerHTML = `<a href="/emp/logout" class="btn btn-outline-dark">로그아웃</a>`;
+						} else {
+							loginStatusDiv.innerHTML = `<a href="login.do" class="btn btn-outline-dark">로그인</a>`;
+						}
+
+						const cartLink = document.querySelector("#cart");
+						const orderLink = document.querySelector("#history");
+
+						if (cartLink) {
+							cartLink.addEventListener("click", function (event) {
+								if (!data.isLoggedIn) {
+									event.preventDefault();  // 페이지 이동을 막음
+									alert("로그인 후 이용 가능합니다.");
+								}
+							});
+						}
+
+						// 주문 내역 클릭 시 로그인 상태 확인
+						if (orderLink) {
+							orderLink.addEventListener("click", function (event) {
+								if (!data.isLoggedIn) {
+									event.preventDefault();  // 페이지 이동을 막음
+									alert("로그인 후 이용 가능합니다.");
+								}
+							});
+						}
+					})
+					.catch(error => console.error('Error fetching login status:', error));
+
 			const request = new XMLHttpRequest();
 			let cartData = JSON.parse(localStorage.getItem("cart")) || []; // localStorage에서 데이터 가져오기
 
@@ -110,8 +144,8 @@
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
-				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>
+				<div class="login-btn-div" id="loginStatus">
+					<a class="btn btn-outline-dark login-btn" href="login.do" >로그인</a>
 				</div>
 			</div>
 		</header>

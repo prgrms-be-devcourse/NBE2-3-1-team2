@@ -24,17 +24,17 @@
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="order.do" class="purchase quick-link">
+				<a href="order.do" class="purchase quick-link" id="history">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="cart.do" class="cart quick-link">
+				<a href="cart.do" class="cart quick-link" id="cart">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
-				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>
+				<div class="login-btn-div" id="loginStatus">
+					<a class="btn btn-outline-dark login-btn" href="login.do" >로그인</a>
 				</div>
 			</div>
 		</header>

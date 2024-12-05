@@ -7,14 +7,13 @@ import com.example.project01.dto.ProductTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Enumeration;
+import java.util.*;
 
 @RestController
 public class CoffeeApiController {
@@ -61,5 +60,51 @@ public class CoffeeApiController {
         return redirectView;
     }
 
+    @PostMapping("/emp/login")
+    public RedirectView login(HttpServletRequest request){
+        RedirectView redirectView = new RedirectView();
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+
+        CustomerTO to = new CustomerTO();
+        to.setEmail(email);
+        to.setPwd(password);
+
+
+        if(customerDAO.login(to)){
+            redirectView.setUrl("/main.do");
+            HttpSession session = request.getSession();
+            session.setAttribute("login_email", email);
+
+        } else {
+            redirectView.setUrl("/login.do?error=loginfailed");
+        }
+
+        return redirectView;
+    }
+
+    @RequestMapping("/emp/logout")
+    public RedirectView logout(HttpServletRequest request){
+        RedirectView redirectView = new RedirectView();
+
+        HttpSession session = request.getSession();
+        session.invalidate();
+
+
+        redirectView.setUrl("/main.do");
+
+        return redirectView;
+    }
+
+    @GetMapping("/emp/loginStatus")
+    public Map<String, Boolean> getLoginStatus(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        boolean isLoggedIn = (session != null && session.getAttribute("login_email") != null);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isLoggedIn", isLoggedIn);
+        return response;
+    }
 
 }

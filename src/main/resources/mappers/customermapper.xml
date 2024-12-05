@@ -16,5 +16,8 @@
         select count(*) from customer where email=#{email}
     </select>
 
+    <select id="login" parameterType="customer">
+        select count(*) from customer where email=#{email} and pwd=password(#{pwd})
+    </select>
 
 </mapper>
