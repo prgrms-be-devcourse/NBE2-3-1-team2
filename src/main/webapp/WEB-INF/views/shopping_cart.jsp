@@ -95,7 +95,7 @@
 			console.log("productId : ", productId);
 
 			const request = new XMLHttpRequest();
-			request.open("POST", "/api/cartview", true); // api 경로
+			request.open("POST", "/api/cartview", true); // api 경로(아래로 하면 헤더 누락)
 			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
 			request.onreadystatechange = function () {
@@ -201,7 +201,7 @@
 			let updatedCount = Object.keys(cart).length;
 			document.getElementById('cart-counter').innerHTML = updatedCount;
 
-			console.log(`Product ${productId} removed from cart`);
+			console.log(`Product \${productId} removed from cart`);
 
 			// 총 금액 다시 계산
 			calculateTotal();
@@ -220,6 +220,7 @@
 			});
 
 			// \${totalAmount.toLocaleString()}원 : 이 부분에서 \ 넣어야지 동작함 ????
+			// script 외부에서 사용시 \ 넣어야함 (jsp 내에서 $가 있기때문에)
 			document.getElementById('total-price').textContent = `\${totalAmount.toLocaleString()}원`;
 			console.log(`Total Amount: \${totalAmount}`);
 		}

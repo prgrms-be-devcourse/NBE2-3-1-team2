@@ -11,6 +11,59 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<title>Grids & Circle</title>
+	<script type="text/javascript">
+		window.onload = function () {
+			// form 내의 버튼 클릭
+			const registerButton = document.querySelector('form button');
+			registerButton.onclick = function (event) {
+				event.preventDefault(); // 폴 기본 동작 방지
+
+				// 폼 데이터 가져오기
+				const email = document.getElementById('id-input').value;
+				const password = document.getElementById('pw-input').value;
+				const addr = document.getElementById('address-input').value;
+				const zip = document.getElementById('zipcode-input').value;
+
+				if (!email || !password || !addr || !zip) {
+					alert("모두 입력해주세요");
+					return;
+				}
+
+				if (zip.length != 5) {
+					alert("우편번호는 5자 입니다");
+				}
+
+				// 존재하는 이메일의 경우 err 처리
+
+
+				const request = new XMLHttpRequest();
+				request.onreadystatechange = function () {
+					if (request.readyState == 4) {
+						if (request.status == 200) {
+							console.log("서버 응답 : " , request.responseText);
+							alert("회원가입 되었습니다")
+						} else {
+							alert("회원가입 실패 : ", request.status);
+						}
+					}
+				}
+				// 요청 열기
+				request.open('POST', '/api/register', true);
+				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+				// 데이터 전송
+				const requestData = JSON.stringify({
+					email: email,
+					pwd: password,
+					addr: addr,
+					zip: zip,
+				});
+				request.send(requestData);
+				console.log("전송 데이터: ", requestData);
+			}
+		}
+
+	</script>
 </head>
 
 <body>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.project01.mapper.CustomerMapper">
-    <select id="select" resultType="String">
-        select now() as now
-    </select>
+    <insert id="customer_register" parameterType="register">
+        insert into customer(email, pwd, addr, zip)
+        values(#{email}, password(#{pwd}), #{addr}, #{zip})
+    </insert>
 </mapper>
 

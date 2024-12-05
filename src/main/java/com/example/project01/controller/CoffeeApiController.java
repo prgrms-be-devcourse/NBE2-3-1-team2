@@ -1,9 +1,14 @@
 package com.example.project01.controller;
 
+import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dao.ProductDAO;
 import com.example.project01.dto.CustomerTO;
 import com.example.project01.dto.ProductTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,6 +19,9 @@ public class CoffeeApiController {
 
     @Autowired
     private ProductDAO productDAO;
+
+    @Autowired
+    private CustomerDAO customerDAO;
 
     @GetMapping(value = "/api/product")
     // 데이터 조회
@@ -33,5 +41,23 @@ public class CoffeeApiController {
         System.out.println("Cart Items: " + cartItems);
 
         return cartItems;
+    }
+
+    // 회원가입
+    @PostMapping(value = "/api/register")
+    public ResponseEntity<String> addProduct(@RequestBody CustomerTO customerTO) {
+    // public String registerCustomer(@RequestBody CustomerTO customerTO) {
+        System.out.println("ZIP: " + customerTO.getZip()); // 제약사항있었음(5글자)
+
+        int result = customerDAO.customerRegister(customerTO);;
+
+        if (result > 0) {
+            System.out.println("회원가입 성공: " + customerTO.getEmail());
+            return ResponseEntity.ok("{\"status\":\"success\"}");
+        } else {
+            System.out.println("회원가입 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"status\":\"failure\"}");
+        }
+        // return "{\"result\" : \"" + result + "\"}";
     }
 }
