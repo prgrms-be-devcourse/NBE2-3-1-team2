@@ -3,8 +3,35 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const count = document.getElementById('cart-counter');
 
 window.onload = function () {
+    loginCheck()
     callList();
     count.innerHTML = cart.length.toString();
+}
+
+function loginCheck() {
+    let btnBox = document.getElementById('auth-check');
+    fetch('/api/customer/login/status')
+        .then(resp => resp.json())
+        .then(res => {
+            if(res.success) {
+                btnBox.innerHTML = `<a class="btn btn-outline-dark login-btn" href="#" onclick="setLogout()">로그아웃</a>`;
+            } else {
+                btnBox.innerHTML = `<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>`;
+            }
+        })
+        .catch(e => console.error('[에러] : ',e));
+}
+
+function setLogout() {
+    fetch('/api/customer/logout')
+    .then(resp => resp.json())
+    .then(res => {
+        if(res.success) {
+            window.location.reload();
+        } else {
+            alert('알 수 없는 에러가 발생했습니다.');
+        }
+    })
 }
 
 function callList() {
@@ -51,13 +78,13 @@ function callList() {
 }
 
 function addToCart(name, pid, button) {
-    const itemBtn = button.closest('.list-group-item').querySelector('.num-input-div').querySelector('.num-input');
-    if (itemBtn.value === null || itemBtn.value === undefined || itemBtn.value === '') {
+    const numInput = button.closest('.list-group-item').querySelector('.num-input-div').querySelector('.num-input');
+    if (numInput.value === null || numInput.value === undefined || numInput.value === '') {
         alert('상품 개수를 입력하시기 바랍니다.');
-        itemBtn.value = 1;
+        numInput.value = 1;
         return false;
     }
-    const qty = parseInt(itemBtn.value, 10);
+    const qty = parseInt(numInput.value, 10);
 
     const cartIndex = cart.findIndex(item => item.pid === pid);
 
@@ -97,11 +124,11 @@ function createToastMsg(msg) {
 }
 
 function updateValue(button, change) {
-    const arrowBtn = button.closest('.num-input-div').querySelector('.num-input');
-    let qty = parseInt(arrowBtn.value, 10) || 0; // 값이 없으면 0으로 초기화
+    const numInput = button.closest('.num-input-div').querySelector('.num-input');
+    let qty = parseInt(numInput.value, 10) || 0; // 값이 없으면 0으로 초기화
     qty += change;
     if (qty < 1) qty = 1; // 최소값 제한
-    arrowBtn.value = qty;
+    numInput.value = qty;
 }
 
 function formatPrice(price) {

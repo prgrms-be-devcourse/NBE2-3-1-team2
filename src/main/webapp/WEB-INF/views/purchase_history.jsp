@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <!-- bootstrap.css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="./script/order.js" async></script>
     <title>Grids & Circle</title>
 </head>
 
@@ -30,8 +31,7 @@
                 <span class="cart-title">장바구니</span>
                 <em class="cart-count" id="cart-counter">0</em>
             </a>
-            <div class="login-btn-div">
-                <a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
+            <div class="login-btn-div" id="auth-check">
             </div>
         </div>
     </header>

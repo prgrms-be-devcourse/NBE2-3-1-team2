@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -32,8 +31,7 @@
                 <span class="cart-title">장바구니</span>
                 <em class="cart-count" id="cart-counter">0</em>
             </a>
-            <div class="login-btn-div">
-                <a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
+            <div class="login-btn-div" id="auth-check">
             </div>
         </div>
     </header>
@@ -46,27 +44,7 @@
                     <hr>
                 </div>
                 <ul class="list-group products" id="products-list">
-                    <!-- format -->
-<%--                    <li class="list-group-item d-flex align-items-center">--%>
-<%--                        <div>--%>
-<%--                            <img class="product-img" src="./images/coffee_bean_01.jpg">--%>
-<%--                        </div>--%>
-<%--                        <div class="col">--%>
-<%--                            <div class="text-muted">커피콩</div>--%>
-<%--                            <div>Columbia Nariñó</div>--%>
-<%--                        </div>--%>
-<%--                        <div class="px-3 text-center">5,000원</div>--%>
-<%--                        <div class="px-3 num-input-div">--%>
-<%--                            <input type="text" class="num-input" value="1">--%>
-<%--                            <div class="num-btn">--%>
-<%--                                <button class="inc" onclick="updateValue(this,1)"></button> <!-- Up Arrow -->--%>
-<%--                                <button class="dec" onclick="updateValue(this,-1)"></button> <!-- Down Arrow -->--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <div class="text-end">--%>
-<%--                            <button class="btn btn-outline-dark" onclick="createToastMsg(1)">담기</button>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
+                    <!-- product - list -->
                 </ul>
             </div>
         </div>

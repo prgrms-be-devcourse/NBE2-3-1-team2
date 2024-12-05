@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <!-- bootstrap.css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="./script/login.js" async></script>
     <title>Grids & Circle</title>
 </head>
 
@@ -36,34 +37,33 @@
     </header>
     <hr>
     <main class="card form-login p-5 mt-5">
-        <form action="">
+        <form id="formLogin">
             <div class="w-100">
                 <h5>로그인</h5>
                 <hr>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
+                <input type="email" class="form-control" id="id-input" placeholder="name@example.com">
+                <label for="id-input">Email</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <input type="password" class="form-control" id="pw-input" placeholder="Password">
+                <label for="pw-input">Password</label>
             </div>
 
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    이메일 기억하기
-                </label>
-            </div>
-            <div class="d-flex flex-column">
-                <button class="btn btn-outline-dark w-50 mx-auto py-2" onclick="">로그인</button>
+<%--            <div class="form-check text-start my-3">--%>
+<%--                <input class="form-check-input" type="checkbox" value="remember-me" id="rem-chk">--%>
+<%--                <label class="form-check-label" for="rem-chk">--%>
+<%--                    이메일 기억하기--%>
+<%--                </label>--%>
+<%--            </div>--%>
+            <div class="d-flex flex-column mt-3">
+                <button class="btn btn-outline-dark w-50 mx-auto py-2" type="submit">로그인</button>
                 <div class="text-center mt-4">
                     <a href="/join.do" class="reg-link">회원가입</a>
                 </div>
             </div>
-
         </form>
     </main>
 

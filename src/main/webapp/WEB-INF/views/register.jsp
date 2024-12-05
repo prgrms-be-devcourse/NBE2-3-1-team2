@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <!-- bootstrap.css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="./script/register.js" async></script>
     <title>Grids & Circle</title>
 </head>
 
@@ -37,7 +38,7 @@
     </header>
     <hr>
     <main class="card form-login p-5 mt-5">
-        <form action="">
+        <form id="formJoin">
             <div class="w-100">
                 <h5>회원가입</h5>
                 <hr>
@@ -68,7 +69,7 @@
 
 
             <div class="d-flex flex-column">
-                <button class="btn btn-outline-dark w-50 mx-auto py-2" onclick="">회원가입</button>
+                <button class="btn btn-outline-dark w-50 mx-auto py-2" type="submit">회원가입</button>
             </div>
         </form>
     </main>

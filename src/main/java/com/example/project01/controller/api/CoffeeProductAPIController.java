@@ -1,4 +1,4 @@
-package com.example.project01.controller;
+package com.example.project01.controller.api;
 
 import com.example.project01.dao.ProductDAO;
 import com.example.project01.dto.ProductTO;
@@ -9,12 +9,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api")
-public class CoffeeAPIController {
+public class CoffeeProductAPIController {
 
-    private ProductDAO productDAO;
+    private final ProductDAO productDAO;
 
     @Autowired
-    public CoffeeAPIController(ProductDAO productDAO) {
+    public CoffeeProductAPIController(ProductDAO productDAO) {
         this.productDAO = productDAO;
     }
 

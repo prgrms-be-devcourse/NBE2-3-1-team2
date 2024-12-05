@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.project01.mapper.CustomerMapper">
+    <select id="authAccount" parameterType="customer" resultType="int">
+        select count(*)
+        from customer
+        where email=#{email} and pwd=password(#{pwd})
+    </select>
+    <select id="selectByEmail" parameterType="String" resultType="customer">
+        select email, addr, zip
+        from customer
+        where email = #{email}
+    </select>
 </mapper>

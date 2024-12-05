@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -31,8 +31,7 @@
                 <span class="cart-title">장바구니</span>
                 <em class="cart-count" id="cart-counter">0</em>
             </a>
-            <div class="login-btn-div">
-                <a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
+            <div class="login-btn-div" id="auth-check">
             </div>
         </div>
     </header>
@@ -46,36 +45,18 @@
                 </div>
                 <div class="d-flex w-100 cart-container">
                     <ul class="list-group products col" id="cart-list">
-                        <li class="list-group-item align-items-center text-center my-auto">상품을 담아주세요!</li>
-<%--                        <li class="list-group-item d-flex align-items-center position-relative">--%>
-<%--                            <div>--%>
-<%--                                <img class="product-img" src="./images/coffee_bean_01.jpg">--%>
-<%--                            </div>--%>
-<%--                            <div class="col">--%>
-<%--                                <div class="text-muted">커피콩</div>--%>
-<%--                                <div>Columbia Nariñó</div>--%>
-<%--                            </div>--%>
-<%--                            <div class="px-3 text-center">5,000원</div>--%>
-<%--                            <div class="px-3 num-input-div">--%>
-<%--                                <input type="text" class="num-input" value="1">--%>
-<%--                                <div class="num-btn">--%>
-<%--                                    <button class="inc" onclick="updateCart(this,1)"></button> <!-- Up Arrow -->--%>
-<%--                                    <button class="dec" onclick="updateCart(this,-1)"></button> <!-- Down Arrow -->--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                            <a class="delete-btn" href="">X</a>--%>
-<%--                        </li>--%>
+                        <!-- cart - list -->
                     </ul>
                     <div class="mx-3 purchase-form">
                         <hr>
                         <div class="d-flex justify-content-between mt-2">
                             <span>총 금액</span>
-                            <span>50,000원</span>
+                            <span id="all-product-price">50,000원</span>
                         </div>
                         <hr>
                         <form id="login-form">
                             <div class="form-floating mb-2">
-                                <input type="email" class="form-control" id="id-input" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="id-input" placeholder="name@example.com" value="test@test.com" readonly>
                                 <label for="id-input">Email@Example.com</label>
                             </div>
                             <div class="form-floating mb-2">
