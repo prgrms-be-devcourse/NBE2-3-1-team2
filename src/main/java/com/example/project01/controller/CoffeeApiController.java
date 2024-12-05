@@ -1,11 +1,14 @@
 package com.example.project01.controller;
 
+import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dao.ProductDAO;
+import com.example.project01.dto.CustomerTO;
 import com.example.project01.dto.ProductTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ public class CoffeeApiController {
 
     @Autowired
     private ProductDAO productDAO;
+    @Autowired
+    private CustomerDAO customerDAO;
 
     @GetMapping("/productList")
     public ArrayList<ProductTO> productList() {
@@ -41,6 +46,68 @@ public class CoffeeApiController {
         }
 
         return cartList;
+    }
+
+    @PostMapping("/join")
+    public String join(HttpServletRequest request) {
+
+        CustomerTO to = new CustomerTO();
+        to.setEmail(request.getParameter("email"));
+        to.setPwd(request.getParameter("pwd"));
+        to.setAddr(request.getParameter("addr"));
+        to.setZip(request.getParameter("zip"));
+
+        String joinCk = customerDAO.emailCheck(to);
+
+        return String.format("{\"joinCk\": \"%s\"}", joinCk);
+    }
+
+    @PostMapping( "/login")
+    public String login(HttpServletRequest request) {
+
+        CustomerTO to = new CustomerTO();
+        to.setEmail(request.getParameter("email"));
+        to.setPwd(request.getParameter("pwd"));
+
+        int cid = customerDAO.loginCheck(to);
+
+        return String.format("{\"cid\": \"%s\"}", cid);
+    }
+
+    // 로그인 성공 시, 세션 재생성 및 cid 삽입 로직
+    @PostMapping("/emailSaveSession")
+    public String emailSaveSession(HttpServletRequest request, HttpSession session) {
+
+        HttpSession ordSession = request.getSession(false);     // false : 세션이 존재하면 반환하고, 없으면 null을 반환합니다.
+
+        if (ordSession != null) { ordSession.invalidate(); }   // 기존 세션 무효화
+
+        HttpSession newSession = request.getSession(true);      // true : 세션이 존재하지 않으면 새로운 세션을 생성하고 반환
+
+        String cid = request.getParameter("cid");
+        newSession.setAttribute("cid", cid);
+
+        return String.format("{\"sessionStatus\": \"%s\"}", "success");
+    }
+
+    // 세션에 로그인 정보가 있는지 확인
+    @GetMapping("/loginSessionCheck")
+    public String loginSessionCheck(HttpSession session) {
+
+        String loginStatus = "loginNo";
+
+        String cid = (String) session.getAttribute("cid");
+
+        if (cid != null) { loginStatus = "loginYes";}
+
+        return String.format("{\"loginStatus\": \"%s\"}", loginStatus);
+    }
+
+    // 로그아웃
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return String.format("{\"logoutStatus\": \"%s\"}", "success");
     }
 
     //세션 방식 ( 사용 보류 )

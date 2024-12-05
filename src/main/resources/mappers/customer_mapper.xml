@@ -3,10 +3,25 @@
 <mapper namespace="com.example.project01.mapper.CustomerMapper">
 
     <!--고객-->
-    <insert id="userInsert">
+    <!--회원가입 여부 확인 -->
+    <select id="joinCheck" parameterType="cTO" resultType="String">
+        select email
+        from customer
+        where email = #{email};
+    </select>
+
+    <!--사용자 생성 -->
+    <insert id="userInsert" parameterType="cTO">
         INSERT INTO customer (email, pwd, addr, zip)
         VALUES (#{email}, password(#{pwd}), #{addr}, #{zip});
     </insert>
+
+    <!--사용자 확인 -->
+    <select id="userCheck" parameterType="cTO" resultType="int">
+        select cid
+        from customer
+        where email = #{email} and pwd = password(#{pwd});
+    </select>
 
     <update id="addrUpdate">
         UPDATE customer

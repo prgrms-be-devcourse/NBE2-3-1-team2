@@ -14,8 +14,21 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		  integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<title>Grids & Circle</title>
+	<script src="./js/common.js"></script>
 	<script type="text/javascript">
 		window.onload = function() {
+
+			// 세션에 로그인 데이터 여부에 따른 페이지 이동 여부 로직 ( 비동기 함수로 인해 콜백 함수 방식 활용 )
+			loginSessionCheck(function (loginStatus) {
+				let loginBtn = '';
+
+				// 로그인 상태 -> 로그아웃 버튼 반환
+				if( loginStatus === "loginYes" ) { loginBtn += '<a class="btn btn-outline-dark login-btn" onclick="logoutBtn()"> 로그아웃</a>'
+				// 비로그인 상태 -> 로그인 버튼 반환
+				} else if( loginStatus === "loginNo" ) { loginBtn += '<a class="btn btn-outline-dark login-btn" href="./login.do">로그인</a>' }
+
+				document.getElementById('login-btn').innerHTML = loginBtn;
+			});
 
 			const request = new XMLHttpRequest();
 			request.onreadystatechange = function () {
@@ -82,7 +95,6 @@
 			}
 			request.open("GET", "/api/productList", true);
 			request.send();
-
 		};
 	</script>
 </head>
@@ -105,9 +117,11 @@
 				<span class="cart-title">장바구니</span>
 				<em class="cart-count" id="cart-counter">0</em>
 			</a>
-			<div class="login-btn-div">
-				<a class="btn btn-outline-dark login-btn" href="./login.do">로그인</a>
+
+			<!--로그인 버튼 생성 위치-->
+			<div class="login-btn-div" id="login-btn">
 			</div>
+
 		</div>
 	</header>
 	<hr>
@@ -130,6 +144,21 @@
 </div>
 
 <script>
+	// 로그아웃 로직
+	function logoutBtn() {
+		logout(function (logoutStatus) {
+			if( logoutStatus === "success" ) {
+				alert("로그아웃 되셨습니다. 로그인 화면으로 이동합니다.")
+				location.href = "./login.do";
+
+				// 로그아웃하면서 장바구니 스토리지 비우기
+				localStorage.removeItem("items");
+				localStorage.removeItem("pidArray");
+				localStorage.removeItem("cartTotalPrice");
+			}
+		});
+	}
+
 	// 숫자 증가/감소 로직
 	function updateValue(button, change) {
 		const input = button.closest('.num-input-div').querySelector('.num-input');

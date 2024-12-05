@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.type.Alias;
 
-@Alias(value = "costomer")
+@Alias(value = "cTO")
 @Getter
 @Setter
 public class CustomerTO {
@@ -14,4 +14,6 @@ public class CustomerTO {
     private String pwd;
     private String addr;
     private String zip;
+    // 회원가입 여부 체크 ( 사용 보류 )
+//    private String joinCk;
 }
