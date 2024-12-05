@@ -5,5 +5,11 @@
         insert into customer(email, pwd, addr, zip)
         values(#{email}, password(#{pwd}), #{addr}, #{zip})
     </insert>
+
+    <select id="customer_emailCHK" parameterType="register">
+        select count(*)
+        from customer
+        where email=#{email};
+    </select>
 </mapper>
 

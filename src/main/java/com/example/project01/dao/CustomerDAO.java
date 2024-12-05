@@ -16,4 +16,8 @@ public class CustomerDAO {
         // return 에서 @Autowired 로 주입한 것을 사용해야함
         return customerMapper.customer_register(customerTO);
     }
+
+    public boolean emailCheck(String email) {
+        return customerMapper.customer_emailCHK(email) > 0;
+    }
 }

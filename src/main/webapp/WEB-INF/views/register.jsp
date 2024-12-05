@@ -13,6 +13,12 @@
 	<title>Grids & Circle</title>
 	<script type="text/javascript">
 		window.onload = function () {
+
+			// 장바구니 아이콘 숫자 표시
+			let existingCart = JSON.parse(localStorage.getItem('cart')) || {}; // localStorage에서 값 가져오기
+			let productCount = Object.keys(existingCart).length;
+			document.getElementById('cart-counter').innerHTML = productCount;
+
 			// form 내의 버튼 클릭
 			const registerButton = document.querySelector('form button');
 			registerButton.onclick = function (event) {
@@ -33,15 +39,15 @@
 					alert("우편번호는 5자 입니다");
 				}
 
-				// 존재하는 이메일의 경우 err 처리
-
-
 				const request = new XMLHttpRequest();
 				request.onreadystatechange = function () {
 					if (request.readyState == 4) {
 						if (request.status == 200) {
-							console.log("서버 응답 : " , request.responseText);
+							console.log("서버 응답 : ", request.responseText);
 							alert("회원가입 되었습니다")
+							window.location.href = "/login.do";
+						} else if (request.status === 409) { // 이메일 중복 오류
+								alert("이미 존재하는 이메일입니다");
 						} else {
 							alert("회원가입 실패 : ", request.status);
 						}
@@ -51,7 +57,7 @@
 				request.open('POST', '/api/register', true);
 				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-				// 데이터 전송
+				// 데이터 전송(json 문자열 전송)
 				const requestData = JSON.stringify({
 					email: email,
 					pwd: password,
@@ -62,7 +68,6 @@
 				console.log("전송 데이터: ", requestData);
 			}
 		}
-
 	</script>
 </head>
 
@@ -70,16 +75,16 @@
 	<div class="container-fluid my-4">
 		<header class="d-flex justify-content-between align-items-center mb-3">
 			<div>
-				<a href="">
+				<a href="/main.do">
 					<img class="brand-logo" src="./images/brand_logo.png">
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="" class="purchase quick-link">
+				<a href="/order.do" class="purchase quick-link">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="" class="cart quick-link">
+				<a href="cartview.do" class="cart quick-link">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
@@ -91,7 +96,7 @@
 		</header>
 		<hr>
 		<main class="card form-login p-5 mt-5">
-			<form action="">
+			<form action="/register.do">
 				<div class="w-100">
 					<h5>회원가입</h5>
 					<hr>

@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CoffeeApiController {
@@ -49,11 +51,21 @@ public class CoffeeApiController {
     // public String registerCustomer(@RequestBody CustomerTO customerTO) {
         System.out.println("ZIP: " + customerTO.getZip()); // 제약사항있었음(5글자)
 
-        int result = customerDAO.customerRegister(customerTO);;
+        // 이메일 중복 확인
+        boolean emailExists = customerDAO.emailCheck(customerTO.getEmail());
+        if (emailExists) {
+            System.out.println("이미 존재하는 이메일: " + customerTO.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"status\":\"email_exists\"}");
+        }
 
+        // 회원 가입 처리
+        int result = customerDAO.customerRegister(customerTO);
         if (result > 0) {
             System.out.println("회원가입 성공: " + customerTO.getEmail());
-            return ResponseEntity.ok("{\"status\":\"success\"}");
+            // return ResponseEntity.ok("{\"status\":\"success\"}");
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", "/login.do") // 리다이렉트할 URL
+                    .build();
         } else {
             System.out.println("회원가입 실패");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"status\":\"failure\"}");
