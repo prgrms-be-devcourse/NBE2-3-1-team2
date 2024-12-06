@@ -51,13 +51,13 @@
                         <hr>
                         <div class="d-flex justify-content-between mt-2">
                             <span>총 금액</span>
-                            <span id="all-product-price">50,000원</span>
+                            <span id="all-product-price"></span>
                         </div>
                         <hr>
-                        <form id="login-form">
+                        <form id="order-form">
                             <div class="form-floating mb-2">
-                                <input type="email" class="form-control" id="id-input" placeholder="name@example.com" value="test@test.com" readonly>
-                                <label for="id-input">Email@Example.com</label>
+                                <input type="email" class="form-control" id="email-input" placeholder="name@example.com" readonly>
+                                <label for="email-input">Email@Example.com</label>
                             </div>
                             <div class="form-floating mb-2">
                                 <input type="text" class="form-control" id="address-input" placeholder="충청북도 청주시 청원구 오창읍 000-0">

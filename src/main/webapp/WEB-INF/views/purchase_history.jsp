@@ -43,7 +43,7 @@
                     <h5>주문내역</h5>
                     <hr>
                 </div>
-                <ul class="purchase-group">
+                <ul class="purchase-group" id="purchase-list-box">
                     <li class="purchase-group-item">
                         <div class="ms-1 mb-1 d-flex justify-content-between">
                             <span>주문번호 : 00001 ( 2024.12.02 01:00:00 )</span>

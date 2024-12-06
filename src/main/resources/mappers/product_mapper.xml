@@ -5,9 +5,12 @@
         select *
         from product
     </select>
-    <select id="selectById" resultType="product" parameterType="String">
+    <select id="selectByIds" resultType="cart" parameterType="list">
         select *
         from product
-        where pid=#{pid}
+        where pid IN
+        <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
 </mapper>

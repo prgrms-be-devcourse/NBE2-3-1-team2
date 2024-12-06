@@ -9,7 +9,8 @@ const priceArr = [];
 window.onload = function () {
     loginCheck();
     callCart();
-    loadCustomerData()
+    loadCustomerData();
+    orderRequest();
     count.innerHTML = cart.length.toString();
 }
 
@@ -48,13 +49,12 @@ function callCart() {
         body: JSON.stringify(cart)
     })
         .then(response => response.json())
-        .then(data => {
+        .then(res => {
             let result = '';
-            if(data.length > 0) {
-                for (let i = 0; i < data.length; i++) {
-                    let row = data[i];
+            if(res.length > 0) {
+                for (let i = 0; i < res.length; i++) {
+                    let row = res[i];
                     priceArr.push({"pid":row.pid, "price": row.price});
-                    let index = cart.findIndex(item => item.pid === row.pid);
 
                     result += `<li class="list-group-item d-flex align-items-center position-relative">
                             <div>
@@ -64,12 +64,12 @@ function callCart() {
                                 <div class="text-muted">${row.cat}</div>
                                 <div>${row.name}</div>
                             </div>
-                            <div class="px-3 text-center price-total">${formatPrice(priceQtyMul(row.price, cart[index].qty))}</div>
+                            <div class="px-3 text-center price-total">${formatPrice(priceQtyMul(row.price, row.qty))}</div>
                             <div class="px-3 num-input-div">
-                                <input type="text" class="num-input" data-i="${row.pid}" data-k="${row.stk}" data-p="${row.price}" value="${cart[index].qty}">
+                                <input type="text" class="num-input" data-i="${row.pid}" data-k="${row.stk}" data-p="${row.price}" value="${row.qty}">
                                 <div class="num-btn">
-                                    <button class="inc" onclick="updateCart(this,1, '${row.pid}','${row.price}','${row.stk}')"></button> <!-- Up Arrow -->
-                                    <button class="dec" onclick="updateCart(this,-1, ${row.pid},'${row.price}','${row.stk}')"></button> <!-- Down Arrow -->
+                                    <button class="inc" onclick="updateCart(this,1, '${row.pid}','${row.price}', '${row.stk}')"></button> <!-- Up Arrow -->
+                                    <button class="dec" onclick="updateCart(this,-1, '${row.pid}','${row.price}', '${row.stk}')"></button> <!-- Down Arrow -->
                                 </div>
                             </div>
                             <a class="delete-btn" href="#" onclick="deleteToCart('${row.pid}',this)">X</a>
@@ -91,14 +91,15 @@ function callCart() {
                 });
                 input.addEventListener("blur", function () {
                     const totalDiv = this.closest('.list-group-item').querySelector('.price-total');
-                    const pid = parseInt(this.getAttribute("data-i"), 10);
+                    const pid = this.getAttribute("data-i");
                     const stk = parseInt(this.getAttribute("data-k"), 10);
                     const price = parseInt(this.getAttribute("data-p"), 10);
-                    if (this.value === '' || this.value === null || this.value === undefined) this.value = 1;
-                    if (this.value > stk) this.value = stk;
-                    totalDiv.innerHTML = formatPrice(priceQtyMul(price, this.value));
-                    console.log(this.value);
-                    updateStorage(pid, this.value);
+                    let qty = parseInt(this.value, 10);
+                    if (qty === null || qty === undefined || qty === 0) this.value = 1;
+                    if (qty > stk) qty = stk;
+                    this.value = qty;
+                    totalDiv.innerHTML = formatPrice(priceQtyMul(price, qty));
+                    updateStorage(pid, qty);
                 });
             });
         }).catch(e => {
@@ -111,16 +112,59 @@ function loadCustomerData() {
         .then(resp => resp.json())
         .then(res => {
             if(res.success) {
-                document.getElementById('id-input').value = res.customer.email;
-                document.getElementById('address-input').value = res.customer.addr;
-                document.getElementById('zipcode-input').value = res.customer.zip;
-            } else {
-                console.log(res);
-                // window.location.href = '/login.do';
+                document.getElementById('email-input').value = res.data.email;
+                document.getElementById('address-input').value = res.data.addr;
+                document.getElementById('zipcode-input').value = res.data.zip;
             }
         })
+        .catch( err => console.log(err));
 }
 
+function orderRequest() {
+    const emailElement = document.getElementById('email-input');
+    const address = document.getElementById('address-input');
+    const zipcode = document.getElementById('zipcode-input');
+
+    document.getElementById('order-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        let email = emailElement.value;
+        let addr = address.value;
+        let zip = zipcode.value;
+        fetch('/api/customer/login/status')
+            .then(resp => resp.json())
+            .then(res => {
+                if(res.success) {
+                    return fetch('/api/order/purchase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            'customer' : {
+                                'email': email,
+                                'addr': addr,
+                                'zip': zip,
+                            }, 'products' : cart
+                        })
+                    })
+                        .then(resp => resp.json())
+                        .then(res => {
+                            if(res.success) {
+                                alert('주문이 완료되었습니다.');
+                                localStorage.removeItem("cart");
+                                window.location.href = '/main.do'
+                            } else {
+                                alert("장바구니에 잘못된 항목이 있습니다.")
+                            }
+                        }).catch(err => console.log(err));
+                } else {
+                    alert('로그인을 해주시기 바랍니다.');
+                    window.location.href = '/login.do';
+                }
+            })
+            .catch(err => console.log(err));
+    })
+}
 
 function deleteToCart(pid, button) {
     const itemBox = button.closest('.list-group-item');
@@ -140,13 +184,15 @@ function deleteToCart(pid, button) {
     count.innerHTML = cart.length.toString();
 }
 
-function updateCart(button, change, pid, price, stk) {
+function updateCart(button, change, pid, price, stock) {
     const numInput = button.closest('.num-input-div').querySelector('.num-input');
     const totalDiv = button.closest('.list-group-item').querySelector('.price-total');
     let qty = parseInt(numInput.value, 10) || 0; // 값이 없으면 0으로 초기화
+    let stk = parseInt(stock, 10);
     qty += change;
     if (qty < 1) qty = 1; // 최소값 제한
     if (qty > stk) qty = stk;
+    console.log('button : ',typeof qty , ' / ', typeof stk);
 
     updateStorage(pid, qty);
     numInput.value = qty;
@@ -177,12 +223,11 @@ function reducePrice() {
     const priceMap = new Map(priceArr.map((item) => [item.pid, item.price]));
 
     let total = cart.reduce((total, item) => {
-        const price = priceMap.get(item.pid);
+        const price = priceMap.get(parseInt(item.pid, 10));
         if (price !== undefined && price !== null) {
             return total + priceQtyMul(price, item.qty);
         }
         return total;
     }, 0);
-
     allPrice.innerHTML = formatPrice(total);
 }

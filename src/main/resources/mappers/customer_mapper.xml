@@ -7,7 +7,7 @@
         where email=#{email} and pwd=password(#{pwd})
     </select>
     <select id="selectByEmail" parameterType="String" resultType="customer">
-        select email, addr, zip
+        select cid, email, addr, zip
         from customer
         where email = #{email}
     </select>

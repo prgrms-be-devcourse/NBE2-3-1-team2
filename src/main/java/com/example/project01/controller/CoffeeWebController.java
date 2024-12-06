@@ -21,10 +21,7 @@ public class CoffeeWebController {
 
     @RequestMapping("cart.view")
     public String cart(HttpSession session) {
-        if (session.getAttribute("s_email") != null) { // 로그인 정보 확인
-            return "shopping_cart";
-        }
-        return "redirect:/login.do";
+        return "shopping_cart";
     }
 
     @RequestMapping("login.do")

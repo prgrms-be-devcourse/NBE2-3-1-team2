@@ -2,6 +2,7 @@ package com.example.project01.controller.api;
 
 import com.example.project01.dao.ProductDAO;
 import com.example.project01.dto.ProductTO;
+import com.example.project01.dto.UserCartTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class CoffeeProductAPIController {
     }
 
     @PostMapping("product/cart/list")
-    public List<ProductTO> getCartProducts(@RequestBody List<ProductTO> products) {
-        return productDAO.selectCartList(products);
+    public List<UserCartTO> getCartProducts(@RequestBody List<UserCartTO> cart) {
+        return productDAO.selectCartList(cart);
     }
 }

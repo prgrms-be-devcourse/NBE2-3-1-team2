@@ -18,10 +18,9 @@ public class CustomerDAO {
         return customerMapper.authAccount(customer) > 0;
     }
 
-    public CustomerTO getCustomerByEmail(String email) {
+    public CustomerTO selectCustomerByEmail(String email) {
         return customerMapper.selectByEmail(email);
     }
-
     public boolean CheckCustomerByEmail(String email) {
         return customerMapper.selectByEmail(email) != null;
     }

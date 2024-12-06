@@ -2,17 +2,14 @@ package com.example.project01.controller.api;
 
 import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dto.CustomerTO;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.project01.dto.response.RespMessageTO;
+import com.example.project01.dto.response.RespObjectTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -27,66 +24,64 @@ public class CoffeeCustomerAPIController {
     }
 
     @PostMapping("customer/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody CustomerTO customer, HttpSession session) {
-
-        Map<String, Object> respMap = new HashMap<>();
-
+    public ResponseEntity<RespMessageTO> login(@RequestBody CustomerTO customer, HttpSession session) {
+        RespMessageTO resp = new RespMessageTO();
         if (customerDAO.loginAuth(customer)) {
             session.setAttribute("s_email", customer.getEmail());
             session.setAttribute("success", true);
 
-            respMap.put("success", true);
-            return ResponseEntity.ok(respMap);
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
         } else {
-            respMap.put("success", false);
-            respMap.put("message", "아이디 또는 비밀번호가 틀렸습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respMap);
+            resp.setSuccess(false);
+            resp.setMessage("아이디 또는 비밀번호가 틀렸습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resp);
         }
     }
 
     @GetMapping("customer/login/status")
-    public ResponseEntity<Map<String, Object>> loginStatus(HttpSession session) {
-        Map<String, Object> respMap = new HashMap<>();
+    public ResponseEntity<RespMessageTO> loginStatus(HttpSession session) {
+        RespMessageTO resp = new RespMessageTO();
         String email = (String) session.getAttribute("s_email");
 
         if (email != null) {
-            respMap.put("success", true);
-            return ResponseEntity.ok(respMap);
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
         } else {
-            respMap.put("success", false);
-            respMap.put("message", "세션 정보가 만료되었습니다. 로그인을 다시 하시기 바랍니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respMap);
+            resp.setSuccess(false);
+            resp.setMessage("세션 정보가 만료되었습니다. 로그인을 다시 하시기 바랍니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resp);
         }
     }
 
     @GetMapping("customer/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpSession session) {
-        Map<String, Object> respMap = new HashMap<>();
+    public ResponseEntity<RespMessageTO> logout(HttpSession session) {
+        RespMessageTO resp = new RespMessageTO();
         session.invalidate();
 
-        respMap.put("success", true);
-        return ResponseEntity.ok(respMap);
+        resp.setSuccess(true);
+        return ResponseEntity.ok(resp);
     }
 
     @GetMapping("customer/cart/info")
-    public ResponseEntity<Map<String, Object>> getCustomer(HttpSession session) {
-        Map<String, Object> respMap = new HashMap<>();
+    public ResponseEntity<RespObjectTO<CustomerTO>> getCustomer(HttpSession session) {
+        RespObjectTO<CustomerTO> resp = new RespObjectTO<>();
         String email = (String) session.getAttribute("s_email");
         if (email != null) {
-            CustomerTO customer = customerDAO.getCustomerByEmail(email);
-            respMap.put("success", true);
-            respMap.put("customer", customer);
-            return ResponseEntity.ok(respMap);
+            CustomerTO customer = customerDAO.selectCustomerByEmail(email);
+            resp.setSuccess(true);
+            resp.setData(customer);
+            return ResponseEntity.ok(resp);
         } else {
-            respMap.put("success", false);
-            respMap.put("message", "세션 정보가 만료되었습니다. 로그인을 다시 하시기 바랍니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respMap);
+            resp.setSuccess(false);
+            resp.setMessage("세션 정보가 만료되었습니다. 로그인을 다시 하시기 바랍니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resp);
         }
     }
 
     @PostMapping("customer/join")
-    public ResponseEntity<Map<String, Object>> joinCustomer(@RequestBody CustomerTO customer) {
-        Map<String, Object> respMap = new HashMap<>();
+    public ResponseEntity<RespMessageTO> joinCustomer(@RequestBody CustomerTO customer) {
+        RespMessageTO resp = new RespMessageTO();
         boolean check;
 
         try {
@@ -95,27 +90,26 @@ public class CoffeeCustomerAPIController {
             check = false;
         }
         if (check) {
-            respMap.put("success", check);
-            return ResponseEntity.ok(respMap);
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
         } else {
-            respMap.put("success", check);
-            respMap.put("message", "이메일이 중복되었습니다.");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(respMap);
+            resp.setSuccess(false);
+            resp.setMessage("이메일이 중복되었습니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
         }
     }
     @PostMapping("customer/join/email")
-    public ResponseEntity<Map<String, Object>> joinDuplicate(@RequestBody Map<String, String> request) {
-        Map<String, Object> respMap = new HashMap<>();
+    public ResponseEntity<RespMessageTO> emailDuplicate(@RequestBody Map<String, String> request) {
+        RespMessageTO resp = new RespMessageTO();
         boolean duplicate = customerDAO.CheckCustomerByEmail(request.get("email"));
 
         if (duplicate) {
-            respMap.put("success", false);
-            respMap.put("message", "이메일이 중복되었습니다");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(respMap);
+            resp.setSuccess(false);
+            resp.setMessage("이메일이 중복되었습니다");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
         } else {
-            respMap.put("success", true);
-            return ResponseEntity.ok(respMap);
-            
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
         }
     }
 }

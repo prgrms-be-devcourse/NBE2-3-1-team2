@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.project01.mapper.PurchaseDetailMapper">
+    <insert id="insertDetail" parameterType="order">
+        insert into purchase_detail(pid, cid, prd_id, qty, price)
+        VALUES
+        <foreach collection="products" item="product"  separator="," index="index">
+            (#{purchase.pid}, #{customer.cid}, #{product.pid}, #{product.qty}, #{product.price})
+        </foreach>
+    </insert>
+    <select id="selectByOrderId" parameterType="int" resultType="product_detail">
+        select pd.pid, pd.cid, pd.prd_id, pd.qty, pd.price, p.cat, p.name, p.img
+        from purchase_detail pd
+        join product p
+        on pd.prd_id = p.pid
+        where pd.pid = #{pid}
+        order by prd_id;
+    </select>
 </mapper>

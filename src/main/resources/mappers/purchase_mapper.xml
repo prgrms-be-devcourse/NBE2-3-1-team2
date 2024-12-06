@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.project01.mapper.PurchaseMapper">
+    <insert id="insertOrder" parameterType="order" useGeneratedKeys="true" keyProperty="purchase.pid">
+        INSERT INTO purchase (cid, ot, sst, zip, addr, st)
+        VALUES (#{customer.cid}, #{purchase.ot}, #{purchase.sst}, #{customer.zip}, #{customer.addr}, #{purchase.st});
+    </insert>
+    <select id="selectByCustomerId" parameterType="int" resultType="purchase">
+        select *
+        from purchase
+        where cid = #{cid}
+        order by pid desc;
+    </select>
 </mapper>

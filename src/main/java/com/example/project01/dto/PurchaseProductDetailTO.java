@@ -8,11 +8,9 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 @ToString
-@Alias("customer")
-public class CustomerTO {
-    private int cid;
-    private String email;
-    private String pwd;
-    private String addr;
-    private String zip;
+@Alias("product_detail")
+public class PurchaseProductDetailTO extends PurchaseDetailTO{
+    private String cat;
+    private String name;
+    private String img;
 }
