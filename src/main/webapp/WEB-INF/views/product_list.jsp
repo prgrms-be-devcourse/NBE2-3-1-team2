@@ -79,7 +79,7 @@
 								result += `</div>`;
 								result += `</div>`;
 								result += `<div class="text-end">`;
-								result += `<button class="btn btn-outline-dark" onclick="addToCart('\${row.name}', '\${row.pid}', this)">담기</button>`;
+								result += `<button class="btn btn-outline-dark" onclick="addToCart('\${row.name}', '\${row.pid}', '\${row.price}', this)">담기</button>`;
 								result += `</div>`;
 								result += `</li>`;
 							}
@@ -183,7 +183,7 @@
 			}, 2000);
 		}
 
-		function addToCart(name, pid, button) {
+		function addToCart(name, pid, price, button) {
 			const itemBtn = button.closest('.list-group-item').querySelector('.num-input-div').querySelector('.num-input');
 			if(itemBtn.value === null || itemBtn.value === undefined || itemBtn.value === ''){
 				alert('상품 개수를 입력하시기 바랍니다');
@@ -196,6 +196,7 @@
 			const product = {
 				name: name,
 				pid: pid,
+				price: price,
 				count: parseInt(itemBtn.value, 10)
 			};
 

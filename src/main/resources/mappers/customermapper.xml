@@ -20,4 +20,7 @@
         select count(*) from customer where email=#{email} and pwd=password(#{pwd})
     </select>
 
+    <select id="findCid" parameterType="String" resultType="Integer">
+        SELECT cid FROM customer WHERE email=#{email}
+    </select>
 </mapper>

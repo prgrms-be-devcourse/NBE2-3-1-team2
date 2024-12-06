@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.PurchaseMapper">
+
+    <insert id="purchase" parameterType="purchase" useGeneratedKeys="true" keyProperty="pid">
+        INSERT INTO purchase (cid, ot, sst, zip, addr, st)
+        VALUES (#{cid}, #{ot}, #{sst}, #{zip}, #{addr}, #{st})
+    </insert>
+
+    <insert id="detail" parameterType="detail">
+        INSERT INTO purchase_detail (pid, cid, prd_id, qty, price)
+        VALUES (#{pid}, #{cid}, #{prd_id}, #{qty}, #{price});
+    </insert>
+</mapper>

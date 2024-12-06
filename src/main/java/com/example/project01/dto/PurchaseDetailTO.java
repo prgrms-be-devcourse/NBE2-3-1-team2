@@ -8,12 +8,11 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 @ToString
-@Alias(value="product")
-public class ProductTO {
-    private String pid;
-    private String img;
-    private String name;
-    private String cat;
-    private String stk;
+@Alias(value="detail")
+public class PurchaseDetailTO {
+    private int pid;
+    private int cid;
+    private String prd_id;
+    private int qty;
     private int price;
 }

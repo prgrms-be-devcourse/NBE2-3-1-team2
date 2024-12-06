@@ -8,4 +8,6 @@ public interface CustomerMapper {
     boolean login(CustomerTO to);
     int register(CustomerTO to);
     boolean emailCheck(String email);
+
+    Integer findCid(String email);
 }

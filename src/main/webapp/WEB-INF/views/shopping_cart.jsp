@@ -168,7 +168,7 @@
 								<!--<span>50,000원</span> -->
 							</div>
 							<hr>
-							<form action="" method="">
+							<form action="/emp/purchase" method="post" name="pfrm">
 								<div class="form-floating mb-2">
 									<input type="email" class="form-control" id="id-input" placeholder="name@example.com">
 									<label for="id-input">Email@Example.com</label>
@@ -182,7 +182,7 @@
 									<label for="zipcode-input">Zip Code</label>
 								</div>
 								<div class="mt-5">
-									<button class="btn btn-dark w-100" type="submit">주문하기</button>
+									<button class="btn btn-dark w-100" id="pbtn">주문하기</button>
 								</div>
 							</form>
 						</div>
@@ -281,6 +281,50 @@
 			document.getElementById('total-price').innerHTML = `
         		<span>총 금액</span>
         		<span>\${totalPrice.toLocaleString()}원</span>`;
+		}
+
+		document.getElementById('pbtn').onclick = function() {
+			const email = document.getElementById("id-input").value;
+			const addr = document.getElementById("address-input").value;
+			const zip = document.getElementById("zipcode-input").value;
+
+			const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+			if (cartData.length === 0) {
+				alert("장바구니가 비어 있습니다.");
+				return false;
+			}
+
+			console.log(email);
+			console.log(addr);
+			console.log(zip);
+
+			// POST 요청 전송
+			fetch("/emp/purchase", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email, // 고객 ID
+					zip, // 우편번호
+					addr, // 주소
+					cart: cartData, // 장바구니 데이터
+				}),
+			}).then((response) => {
+				if (response.ok) {
+					alert("주문이 완료되었습니다!");
+					localStorage.removeItem("cart"); // 주문 완료 후 장바구니 비우기
+					window.location.href = "/main.do"; // 메인 페이지로 리다이렉트
+				} else {
+					alert("주문 처리 중 문제가 발생했습니다.");
+				}
+			}).catch((error) => {
+						console.error("Error during purchase:", error);
+						alert("주문 중 에러가 발생했습니다.");
+			});
+
+
+
 		}
 
 	</script>

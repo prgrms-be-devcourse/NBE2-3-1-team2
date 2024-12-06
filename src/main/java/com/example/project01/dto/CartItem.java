@@ -8,6 +8,10 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 @ToString
-@Alias(value="history")
-public class purchase_detailDTO {
+@Alias(value="cartItem")
+public class CartItem {
+    private String name;
+    private String pid;
+    private int count;
+    private int price;
 }
