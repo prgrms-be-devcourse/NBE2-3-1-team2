@@ -114,8 +114,8 @@
 
 			request.send();
 		}
-		// =============== 구매 정보 저장하기 -> 결제하기 클릭시 데이터 저장 ==========
 
+		// =============== 구매 정보 저장하기 -> 결제하기 클릭시 데이터 저장 ==========
 		let formattedDate;
 		function customerPurchased() {
 
@@ -188,7 +188,6 @@
 				formattedDate = `\${nextDayTwoPM.getFullYear()}-\${padZero(nextDayTwoPM.getMonth() + 1)}-\${padZero(nextDayTwoPM.getDate())} 14:00:00`;
 			}
 		}
-
 
 		// =============== 장바구니 데이터 데이터 불러오기 ==============
 		function loadCart() {
@@ -265,8 +264,6 @@
 					removeItemFromCart(this);
 				});
 			});
-
-
 		}
 
 		// =============== 숫자 증가/감소 로직 ==> 입력시 처리(window.onload) ===============
@@ -286,7 +283,7 @@
 			cart[productID] = curValue; // 상품 ID의 수량 업데이트
 			localStorage.setItem('cart', JSON.stringify(cart)); // LocalStorage 저장
 
-			console.log(`Product ${productID} updated to quantity: ${curValue}`);
+			console.log(`Product \${productID} updated to quantity: \${curValue}`);
 
 			// 총 금액 다시 계산
 			calculateTotal();
@@ -316,7 +313,6 @@
 			// 총 금액 다시 계산
 			calculateTotal();
 		}
-
 
 		// =============== 총 금액 계산 함수 ===============
 		function calculateTotal() {

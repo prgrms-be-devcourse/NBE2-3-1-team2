@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.project01.mapper.PurchaseMapper">
+    <!-- (1) useGeneratedKeys="true" keyProperty="purchase.pid"-->
+    <!-- (2) join select 사용 -->
     <insert id="purchase_info" parameterType="purchase">
         insert into purchase(cid, sst, zip, addr, st)
         values (#{cid}, #{sst}, #{zip}, #{addr}, #{st})
