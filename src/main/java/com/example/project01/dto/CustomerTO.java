@@ -8,7 +8,7 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 public class CustomerTO {
-    private int id;
+    private int cid;
     private String email;
     private String pwd;
     private String addr;

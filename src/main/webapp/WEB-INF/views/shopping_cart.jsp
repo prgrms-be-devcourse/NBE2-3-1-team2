@@ -57,7 +57,7 @@
 							<hr>
 							<form action="" method="post">
 								<div class="form-floating mb-2">
-									<input type="email" class="form-control" id="id-input" placeholder="name@example.com">
+									<input type="email" class="form-control" id="id-input" readonly>
 									<label for="id-input">Email@Example.com</label>
 								</div>
 								<div class="form-floating mb-2">
@@ -87,7 +87,111 @@
 
 			checkSession();
 			setupLinks();
+			customerInfo();
+			loadCart();
+			customerPurchased()
 
+		};
+
+		let customerData = {};
+		// =============== 고객 정보 불러오기 ===========================
+		function customerInfo() {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/api/customerInfo", true);
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+			request.onreadystatechange = function () {
+				if (this.readyState === 4) {
+					if (this.status === 200) {
+						customerData = JSON.parse(request.responseText);
+						console.log("Customer Info:", customerData);
+
+						document.getElementById("id-input").value = customerData.email;
+						document.getElementById('address-input').value = customerData.addr;
+						document.getElementById('zipcode-input').value = customerData.zip;
+					}
+				}
+			};
+
+			request.send();
+		}
+		// =============== 구매 정보 저장하기 -> 결제하기 클릭시 데이터 저장 ==========
+
+		let formattedDate;
+		function customerPurchased() {
+
+			const purchaseButton = document.querySelector('form button');
+			purchaseButton.onclick = function (event) {
+				event.preventDefault();
+
+				// DTO 안에 cid로 들어가야되는데 id있어서 계속 오류났음,,, 오타 조심
+				cid = customerData.cid;
+
+				orderTime();
+
+				zipcode = document.getElementById('zipcode-input').value;
+				address = document.getElementById('address-input').value;
+				state = "배송전";
+
+				if (zipcode.length != 5) {
+					alert("우편번호는 5자 입니다");
+					return;
+				}
+
+				// 이게 함수 안에 안들어있었음
+				const request = new XMLHttpRequest();
+
+				request.onreadystatechange = function () {
+					if (this.readyState === 4) {
+						if (this.status === 200) {
+							console.log("서버 응답 : ", request.responseText);
+							alert("주문 완료")
+							window.localStorage.clear();
+							window.location.href = "/main.do";
+						} else {
+							alert("주문 실패")
+						}
+					}
+				};
+				const requestData = JSON.stringify({
+					cid: cid,
+					addr: address,
+					sst: formattedDate,
+					zip: zipcode,
+					addr: address,
+					st: state
+				});
+				console.log(requestData);
+
+				request.open('POST', '/api/purchase', true);
+				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+				request.send(requestData);
+			}
+		}
+
+		// ========= 배송 시간 로직 (2시) =============
+		function orderTime() {
+			const currentDate = new Date();
+
+			// 기준 시간 (오후 2시) 생성
+			const twoPM = new Date(currentDate);
+			twoPM.setHours(14, 0, 0, 0); // 오후 2시로 설정
+
+			const padZero = (num) => (num < 10 ? "0" + num : num); // 숫자를 두 자리로 포맷팅
+
+			if (currentDate < twoPM) {
+				// 현재 시간이 오후 2시 이전인 경우: 당일 오후 2시
+				formattedDate = `\${twoPM.getFullYear()}-\${padZero(twoPM.getMonth() + 1)}-\${padZero(twoPM.getDate())} 14:00:00`;
+			} else {
+				// 현재 시간이 오후 2시 이후인 경우: 다음날 오후 2시
+				const nextDayTwoPM = new Date(twoPM);
+				nextDayTwoPM.setDate(twoPM.getDate() + 1); // 다음날로 이동
+				formattedDate = `\${nextDayTwoPM.getFullYear()}-\${padZero(nextDayTwoPM.getMonth() + 1)}-\${padZero(nextDayTwoPM.getDate())} 14:00:00`;
+			}
+		}
+
+
+		// =============== 장바구니 데이터 데이터 불러오기 ==============
+		function loadCart() {
 			//localstorage 에서 pid 받아오기
 			let existingCart = JSON.parse(localStorage.getItem('cart')) || {}; // localStorage에서 값 가져오기
 			//장바구니 아이콘에 표시하기
@@ -114,7 +218,7 @@
 			};
 			// 서버로 전송되는 데이터 형식(객체 배열)
 			request.send(JSON.stringify(productId));
-		};
+		}
 
 		// =============== 장바구니 아이템 렌더링 ================
 		function renderCart(jsonData, existingCart) {
@@ -161,6 +265,8 @@
 					removeItemFromCart(this);
 				});
 			});
+
+
 		}
 
 		// =============== 숫자 증가/감소 로직 ==> 입력시 처리(window.onload) ===============
@@ -185,7 +291,6 @@
 			// 총 금액 다시 계산
 			calculateTotal();
 		}
-
 
 		// =============== 상품 삭제 함수 ===============
 		function removeItemFromCart(button) {
@@ -229,6 +334,7 @@
 			document.getElementById('total-price').textContent = `\${totalAmount.toLocaleString()}원`;
 			console.log(`Total Amount: \${totalAmount}`);
 		}
+
 	</script>
 </body>
 </html>

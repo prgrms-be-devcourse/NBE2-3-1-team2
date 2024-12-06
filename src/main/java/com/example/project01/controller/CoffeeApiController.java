@@ -2,8 +2,10 @@ package com.example.project01.controller;
 
 import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dao.ProductDAO;
+import com.example.project01.dao.PurchaseDAO;
 import com.example.project01.dto.CustomerTO;
 import com.example.project01.dto.ProductTO;
+import com.example.project01.dto.PurchaseTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CoffeeApiController {
 
     @Autowired
     private CustomerDAO customerDAO;
+
+    @Autowired
+    private PurchaseDAO purchaseDAO;
 
     @GetMapping(value = "/api/product")
     // 데이터 조회
@@ -125,5 +130,24 @@ public class CoffeeApiController {
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("{\"status\":\"logout_success\"}");
+    }
+
+    @PostMapping(value = "/api/customerInfo")
+    public CustomerTO customerInfo(HttpSession session) {
+        String email = (String) session.getAttribute("email");
+        // System.out.println("api/customerinfo : " + customerDAO.customerInfo(email).toString());
+        return customerDAO.customerInfo(email);
+    }
+
+    @PostMapping(value = "/api/purchase")
+    public ResponseEntity<String> purchase(@RequestBody PurchaseTO purchaseTO){
+
+        System.out.println("#############");
+
+        int result = purchaseDAO.purchaseInfo(purchaseTO);
+        System.out.println("result " + result);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/main.do") // 리다이렉트할 URL
+                .build();
     }
 }
