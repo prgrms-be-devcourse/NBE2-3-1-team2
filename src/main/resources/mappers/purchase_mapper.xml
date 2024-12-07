@@ -3,7 +3,7 @@
 <mapper namespace="com.example.project01.mapper.PurchaseMapper">
     <!-- (1) useGeneratedKeys="true" keyProperty="purchase.pid"-->
     <!-- (2) join select 사용 -->
-    <insert id="purchase_info" parameterType="purchase">
+    <insert id="purchase_info" parameterType="purchase" useGeneratedKeys="true" keyProperty="pid">
         insert into purchase(cid, sst, zip, addr, st)
         values (#{cid}, #{sst}, #{zip}, #{addr}, #{st})
     </insert>

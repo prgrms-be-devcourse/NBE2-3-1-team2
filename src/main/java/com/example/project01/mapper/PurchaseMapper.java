@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PurchaseMapper {
-    int purchase_info(PurchaseTO purchaseTO);
+    void purchase_info(PurchaseTO purchaseTO);
 }

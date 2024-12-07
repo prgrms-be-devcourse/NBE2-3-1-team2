@@ -89,9 +89,31 @@
 			setupLinks();
 			customerInfo();
 			loadCart();
+
+			// purchaseInfo();
+
 			customerPurchased()
 
 		};
+
+		// =============== 구매내역을 위한 정보 뽑기 ===========
+		function purchaseInfo() {
+
+			// customerData -> cid
+			// loadCart -> prd_id
+			// pid(purchase) -> select 구문 필요 -> // purchase insert -> purchase select -> purchase insert -> reset
+			// calculator total -> qty, price -> (prd_id에 따른 수량 html 에서 가져오기) 하고 가져오기
+
+			// console.log("c_cid", customerData.cid); // customerInfo 내부에서 선언시, 출력됨(비동기 처리여서 그럼), 일단 진행
+
+			// pid, cid를 insert 된 purchase 에서 select --> 이걸 어떻게 알지(?) -> 서버 응답에 pid, cid 를 담을 수 없나?
+			/// ->  만약 동시에 넣으면 어떤식으로 들어가지는거지
+
+			console.log(prd);
+			// key : { price(가격), qty(수량) };
+
+		}
+
 
 		let customerData = {};
 		// =============== 고객 정보 불러오기 ===========================
@@ -108,6 +130,9 @@
 						document.getElementById("id-input").value = customerData.email;
 						document.getElementById('address-input').value = customerData.addr;
 						document.getElementById('zipcode-input').value = customerData.zip;
+
+						// p_cid = customerData.cid;
+						// purchaseInfo();
 					}
 				}
 			};
@@ -143,7 +168,16 @@
 				request.onreadystatechange = function () {
 					if (this.readyState === 4) {
 						if (this.status === 200) {
-							console.log("서버 응답 : ", request.responseText);
+							//purchaseInfo();
+							//console.log("서버 응답 : ", request.responseText);
+							const response = JSON.parse(request.responseText);
+
+							purchaseDetail(response, prd)
+
+							//console.log("purchase: ", response.pid);
+							//console.log("purchase: ", response.cid);
+							//console.log(prd);
+
 							alert("주문 완료")
 							window.localStorage.clear();
 							window.location.href = "/main.do";
@@ -167,6 +201,47 @@
 				request.send(requestData);
 			}
 		}
+		// ========= 주문 내역 ============
+		function purchaseDetail(response, prd) {
+			console.log("purchase: ", response.pid);
+			console.log("purchase: ", response.cid);
+			console.log(prd);
+
+			const p_pid = response.pid;
+			const p_cid = response.cid;
+
+			// prd 객체 순회
+			Object.keys(prd).forEach(p_prd => {
+				const p_product = prd[p_prd];
+				const p_qty = p_product.qty;
+				const p_price = p_product.price * p_qty;
+
+				const requestData = {
+					pid: p_pid,
+					cid: p_cid,
+					prd_id: parseInt(p_prd),
+					qty: p_qty,
+					price: p_price
+				};
+
+				console.log("purchaseDetail: ", requestData);
+				const request = new XMLHttpRequest()
+				request.onreadystatechange = function () {
+					if (this.readyState === 4) {
+						if (this.status === 200) {
+							console.log("purchase_detail success");
+						} else {
+							console.log("error purchase_detail insert");
+						}
+					}
+				};
+				const jsonData = JSON.stringify(requestData);
+				request.open("POST", "/api/purchaseDetail", true);
+				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+				request.send(jsonData);
+			})
+
+		}
 
 		// ========= 배송 시간 로직 (2시) =============
 		function orderTime() {
@@ -189,6 +264,8 @@
 			}
 		}
 
+
+
 		// =============== 장바구니 데이터 데이터 불러오기 ==============
 		function loadCart() {
 			//localstorage 에서 pid 받아오기
@@ -198,7 +275,7 @@
 			document.getElementById('cart-counter').innerHTML = productCount;
 
 			// productId 데이터 생성 방식(객체형식을 따르도록, pid를 int로 변환하고, 객체로 감싸 서버 전송)
-			let productId = Object.keys(existingCart).map(pid => ({ pid: parseInt(pid) }));
+			var productId = Object.keys(existingCart).map(pid => ({ pid: parseInt(pid) }));
 
 			console.log("productId : ", productId);
 
@@ -220,6 +297,7 @@
 		}
 
 		// =============== 장바구니 아이템 렌더링 ================
+		// let quantity;
 		function renderCart(jsonData, existingCart) {
 			let result = ``;
 			jsonData.forEach(list => {
@@ -314,6 +392,7 @@
 			calculateTotal();
 		}
 
+		let prd = {};
 		// =============== 총 금액 계산 함수 ===============
 		function calculateTotal() {
 			let cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -321,7 +400,15 @@
 
 			jsonData.forEach(item => {
 				if (cart[item.pid]) {
-					totalAmount += item.price * cart[item.pid];
+
+					const p_key = item.pid; // 상품 ID를 key로 사용
+					const p_qty = cart[item.pid]; // 장바구니 수량
+					const p_price = item.price; // 단가
+					pid_price = item.price * cart[item.pid];
+					prd[p_key] = {price: p_price, qty: p_qty};
+					// prd[p_key] = {price: p_price * p_qty};
+
+					totalAmount += p_price * p_qty;
 				}
 			});
 

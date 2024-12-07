@@ -13,7 +13,8 @@ public class PurchaseDAO {
     @Autowired
     private PurchaseMapper purchaseMapper;
 
-    public int purchaseInfo(PurchaseTO purchaseTO) {
-        return purchaseMapper.purchase_info(purchaseTO);
+    public PurchaseTO purchaseInfo(PurchaseTO purchaseTO) {
+        purchaseMapper.purchase_info(purchaseTO);
+        return purchaseTO;
     }
 }

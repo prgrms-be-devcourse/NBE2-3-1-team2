@@ -3,8 +3,10 @@ package com.example.project01.controller;
 import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dao.ProductDAO;
 import com.example.project01.dao.PurchaseDAO;
+import com.example.project01.dao.PurchaseDetailDAO;
 import com.example.project01.dto.CustomerTO;
 import com.example.project01.dto.ProductTO;
+import com.example.project01.dto.PurchaseDetailTO;
 import com.example.project01.dto.PurchaseTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +32,9 @@ public class CoffeeApiController {
 
     @Autowired
     private PurchaseDAO purchaseDAO;
+
+    @Autowired
+    private PurchaseDetailDAO purchaseDetailDAO;
 
     @GetMapping(value = "/api/product")
     // 데이터 조회
@@ -140,14 +145,20 @@ public class CoffeeApiController {
     }
 
     @PostMapping(value = "/api/purchase")
-    public ResponseEntity<String> purchase(@RequestBody PurchaseTO purchaseTO){
+    public ResponseEntity<PurchaseTO> purchase(@RequestBody PurchaseTO purchaseTO){
 
         System.out.println("#############");
 
-        int result = purchaseDAO.purchaseInfo(purchaseTO);
+        // PurchaseTO 객체를 클라이언트에게 반환(insert후, pid 반환)
+        PurchaseTO result = purchaseDAO.purchaseInfo(purchaseTO);
         System.out.println("result " + result);
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/main.do") // 리다이렉트할 URL
-                .build();
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "/api/purchaseDetail")
+    public ResponseEntity<String> purchaseDetail(@RequestBody PurchaseDetailTO purchaseDetailTO){
+        System.out.println(purchaseDetailDAO.purchaseDetail(purchaseDetailTO));
+        purchaseDetailDAO.purchaseDetail(purchaseDetailTO);
+        return ResponseEntity.ok("PurchaseDetail insert success");
     }
 }
