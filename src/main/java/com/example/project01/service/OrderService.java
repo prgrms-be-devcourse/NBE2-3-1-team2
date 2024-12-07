@@ -5,8 +5,10 @@ import com.example.project01.dao.ProductDAO;
 import com.example.project01.dao.PurchaseDAO;
 import com.example.project01.dao.PurchaseDetailDAO;
 import com.example.project01.dto.CustomerTO;
+import com.example.project01.dto.PurchaseDateTO;
 import com.example.project01.dto.PurchaseProductDetailTO;
 import com.example.project01.dto.PurchaseTO;
+import com.example.project01.dto.request.ReqDateTO;
 import com.example.project01.dto.request.ReqOrderTO;
 import com.example.project01.dto.response.RespMessageTO;
 import com.example.project01.dto.response.RespOrderHistoryTO;
@@ -91,6 +93,40 @@ public class OrderService {
         resp.setLists(lists);
 
         resp.setSuccess(true);
+
+        return resp;
+    }
+
+    public RespOrderHistoryTO getOrderHistoryByDate(PurchaseDateTO date) {
+        RespOrderHistoryTO resp = new RespOrderHistoryTO();
+        CustomerTO customer = customerDAO.selectCustomerByEmail(date.getEmail());
+        date.setCid(customer.getCid());
+        resp.setPurchase(purchaseDAO.getPurchasesByDate(date));
+
+        List<List<PurchaseProductDetailTO>> lists = new ArrayList<>();
+        resp.getPurchase().forEach(item ->
+                lists.add(purchaseDetailDAO.getPurchaseDetailByPurchaseId(item.getPid()))
+        );
+        resp.setLists(lists);
+
+        resp.setSuccess(true);
+
+        return resp;
+    }
+
+    public RespMessageTO setRefund(PurchaseTO purchase) {
+        RespMessageTO resp = new RespMessageTO();
+
+        purchase.setSt(OrderStatus.CANCELED.getDesc());
+
+        boolean trigger = purchaseDAO.updatePurchaseState(purchase);
+
+        if (trigger) {
+            resp.setSuccess(true);
+        } else {
+            resp.setSuccess(false);
+            resp.setMessage("이미 환불된 상품입니다.");
+        }
 
         return resp;
     }

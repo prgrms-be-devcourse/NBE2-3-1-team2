@@ -23,7 +23,7 @@
         <div class="d-flex">
             <a href="/order.do" class="purchase quick-link">
                 <img class="mx-auto" src="./images/purchase.png" width="28" height="28">
-                <span class="cart-title">주문내역</span>
+                <span class="cart-title">마이페이지</span>
             </a>
             <a href="/cart.view" class="cart quick-link">
                 <img class="mx-auto" src="./images/cart.png" width="28" height="28">

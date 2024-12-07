@@ -28,4 +28,12 @@ public class CustomerDAO {
     public boolean addCustomer(CustomerTO customer) {
         return customerMapper.insertCustomer(customer) > 0;
     }
+
+    public boolean deleteCustomer(CustomerTO customer) {
+        return customerMapper.deleteCustomer(customer) > 0;
+    }
+
+    public boolean updateCustomer(CustomerTO customer) {
+        return customerMapper.updateCustomer(customer) > 0;
+    }
 }

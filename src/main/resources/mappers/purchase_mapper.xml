@@ -11,4 +11,20 @@
         where cid = #{cid}
         order by pid desc;
     </select>
+    <select id="selectByDate" parameterType="purchase_date" resultType="purchase">
+        select *
+        from purchase
+        where cid = #{cid} and ot between #{start} and #{end}
+        order by pid desc;
+    </select>
+    <update id="updatePurchaseState" parameterType="purchase">
+        UPDATE purchase
+        SET ST = #{st}
+        WHERE pid=#{pid} AND st = '배송 대기';
+    </update>
+    <update id="updatePendingPurchases">
+        UPDATE purchase
+        SET st = '배송 완료'
+        WHERE st = '배송 대기' AND sst &lt;= now()
+    </update>
 </mapper>

@@ -8,4 +8,6 @@ public interface CustomerMapper {
     int authAccount(CustomerTO customer);
     CustomerTO selectByEmail(String email);
     int insertCustomer(CustomerTO customer);
+    int deleteCustomer(CustomerTO customer);
+    int updateCustomer(CustomerTO customer);
 }

@@ -15,4 +15,13 @@
         insert into customer(email, pwd, addr, zip)
         values (#{email}, password(#{pwd}), #{addr}, #{zip})
     </insert>
+    <delete id="deleteCustomer" parameterType="customer">
+        delete from customer
+        where email = #{email} and pwd = password(#{pwd})
+    </delete>
+    <update id="updateCustomer" parameterType="customer">
+        update customer
+        set addr=#{addr}, zip=#{zip}
+        where email=#{email} and pwd=password(#{pwd})
+    </update>
 </mapper>

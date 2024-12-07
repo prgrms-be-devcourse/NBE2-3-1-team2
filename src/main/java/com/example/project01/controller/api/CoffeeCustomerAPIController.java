@@ -63,7 +63,7 @@ public class CoffeeCustomerAPIController {
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping("customer/cart/info")
+    @GetMapping("customer/info")
     public ResponseEntity<RespObjectTO<CustomerTO>> getCustomer(HttpSession session) {
         RespObjectTO<CustomerTO> resp = new RespObjectTO<>();
         String email = (String) session.getAttribute("s_email");
@@ -110,6 +110,40 @@ public class CoffeeCustomerAPIController {
         } else {
             resp.setSuccess(true);
             return ResponseEntity.ok(resp);
+        }
+    }
+
+    @DeleteMapping("customer/resign")
+    public ResponseEntity<RespMessageTO> resign(@RequestBody CustomerTO customer, HttpSession session) {
+        RespMessageTO resp = new RespMessageTO();
+
+        customer.setEmail(session.getAttribute("s_email").toString());
+        boolean trigger = customerDAO.deleteCustomer(customer);
+
+        if (trigger) {
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
+        } else {
+            resp.setSuccess(false);
+            resp.setMessage("회원정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resp);
+        }
+    }
+
+    @PutMapping("customer/update")
+    public ResponseEntity<RespMessageTO> updateCustomer(@RequestBody CustomerTO customer, HttpSession session) {
+        RespMessageTO resp = new RespMessageTO();
+        customer.setEmail(session.getAttribute("s_email").toString());
+
+        boolean trigger = customerDAO.updateCustomer(customer);
+
+        if (trigger) {
+            resp.setSuccess(true);
+            return ResponseEntity.ok(resp);
+        } else {
+            resp.setSuccess(false);
+            resp.setMessage("회원정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resp);
         }
     }
 }

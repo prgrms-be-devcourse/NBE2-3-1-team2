@@ -108,7 +108,7 @@ function callCart() {
 }
 
 function loadCustomerData() {
-    fetch('/api/customer/cart/info')
+    fetch('/api/customer/info')
         .then(resp => resp.json())
         .then(res => {
             if(res.success) {

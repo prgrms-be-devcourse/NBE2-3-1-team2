@@ -40,4 +40,11 @@ public class CoffeeWebController {
         return "register";
     }
 
+    @RequestMapping("mypage.do")
+    public String mypage(HttpSession session) {
+        if (session.getAttribute("s_email") != null) {
+            return "user_page";
+        }
+        return "redirect:/main.do";
+    }
 }
