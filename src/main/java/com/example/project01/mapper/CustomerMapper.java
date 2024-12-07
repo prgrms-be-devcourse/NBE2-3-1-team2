@@ -9,5 +9,6 @@ public interface CustomerMapper {
     String joinCheck(CustomerTO to);
     int userInsert(CustomerTO to);
     Integer userCheck(CustomerTO to);
+    CustomerTO selectUserData(CustomerTO to);
 
 }

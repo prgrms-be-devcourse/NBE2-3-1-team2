@@ -14,5 +14,4 @@ public enum OrderStatus {
     OrderStatus(String desc) {
         this.desc = desc;
     }
-
 }

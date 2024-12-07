@@ -40,4 +40,12 @@ public class CustomerDAO {
             return 0;
         }
     }
+
+    // 해당 유저 데이터 가져오기
+    public CustomerTO selectUser(CustomerTO to) {
+
+        to = customerMapper.selectUserData(to);
+
+        return to;
+    }
 }

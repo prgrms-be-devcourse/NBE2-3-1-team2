@@ -3,7 +3,7 @@
 <mapper namespace="com.example.project01.mapper.PurchaseDetailMapper">
 
     <!--구매 내역 -->
-    <insert id="purchase_detail">
+    <insert id="createPurDt" parameterType="pcdTO">
         INSERT INTO purchase_detail (pid, cid, prd_id, qty, price)
         VALUES (#{pid}, #{cid}, #{prd_id}, #{qty}, #{price});
     </insert>

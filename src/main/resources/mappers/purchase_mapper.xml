@@ -2,10 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.example.project01.mapper.PurchaseMapper">
-    <!--구매-->
-    <insert id="purchase">
-        INSERT INTO purchase (cid, dt, zip, addr, st)
-        VALUES (#{cid}, NOW(), #{zip}, #{addr}, #{st});
+    <!--구매 -->
+
+    <!--구매 박스 생성 및 자동 증가 생성되는 pid를 pcTO 객체에 삽입 ( 즉, Insert 전에 생성된 pid를 pcTO 객체에 넣는다.)  -->
+    <!--useGeneratedKeys : DB 테이블에 선언된 자동 증가 필드의 값 가져오기 여부  -->
+    <!--keyProperty : 자동 증가 id를 pcTO 객체(insert 시 보낼 객체 데이터 = parameterType ) 어느 필드에 넣을 건지 선언  -->
+    <insert id="createPurCart" useGeneratedKeys="true" keyProperty="pid" parameterType="pcTO">
+        INSERT INTO purchase (cid, ot, sst, zip, addr, st)
+        VALUES (#{cid}, #{ot}, #{sst}, #{zip}, #{addr}, #{st});
     </insert>
 
 </mapper>

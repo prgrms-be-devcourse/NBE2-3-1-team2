@@ -23,6 +23,13 @@
         where email = #{email} and pwd = password(#{pwd});
     </select>
 
+    <!--사용자 데이터 가져오기 -->
+    <select id="selectUserData" parameterType="cTO" resultType="cTO">
+        select cid, email, addr, zip
+        from customer
+        where cid = #{cid};
+    </select>
+
     <update id="addrUpdate">
         UPDATE customer
         SET addr = #{addr}, zip = #{zip}
