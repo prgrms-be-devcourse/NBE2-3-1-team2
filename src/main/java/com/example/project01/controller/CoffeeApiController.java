@@ -1,13 +1,7 @@
 package com.example.project01.controller;
 
-import com.example.project01.dao.CustomerDAO;
-import com.example.project01.dao.ProductDAO;
-import com.example.project01.dao.PurchaseDAO;
-import com.example.project01.dao.PurchaseDetailDAO;
-import com.example.project01.dto.CustomerTO;
-import com.example.project01.dto.ProductTO;
-import com.example.project01.dto.PurchaseDetailTO;
-import com.example.project01.dto.PurchaseTO;
+import com.example.project01.dao.*;
+import com.example.project01.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +29,9 @@ public class CoffeeApiController {
 
     @Autowired
     private PurchaseDetailDAO purchaseDetailDAO;
+
+    @Autowired
+    private PurchaseHistoryDAO purchaseHistoryDAO;
 
     @GetMapping(value = "/api/product")
     // 데이터 조회
@@ -156,9 +153,24 @@ public class CoffeeApiController {
     }
 
     @PostMapping(value = "/api/purchaseDetail")
-    public ResponseEntity<String> purchaseDetail(@RequestBody PurchaseDetailTO purchaseDetailTO){
-        System.out.println(purchaseDetailDAO.purchaseDetail(purchaseDetailTO));
-        purchaseDetailDAO.purchaseDetail(purchaseDetailTO);
-        return ResponseEntity.ok("PurchaseDetail insert success");
+    public ResponseEntity<String> purchaseDetail(@RequestBody List<PurchaseDetailTO>  purchaseDetailTO){
+
+        try {
+            for (PurchaseDetailTO detail : purchaseDetailTO) {
+                purchaseDetailDAO.purchaseDetail(detail);
+            }
+            return ResponseEntity.ok("PurchaseDetail insert success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inserting purchase details");
+        }
+    }
+
+    @PostMapping(value = "/api/purchaseHistory")
+    public ArrayList<PurchaseHistoryTO> purchaseHistory(HttpSession session){
+
+        String email = (String) session.getAttribute("email");
+        ArrayList<PurchaseHistoryTO> purchaseHistory = purchaseHistoryDAO.purchaseHistoryList(email);
+        System.out.println("purchaseHistory: " + purchaseHistory);
+        return purchaseHistory;
     }
 }

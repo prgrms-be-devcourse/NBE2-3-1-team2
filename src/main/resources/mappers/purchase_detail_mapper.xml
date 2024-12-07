@@ -5,4 +5,4 @@
         insert into purchase_detail(pid, cid, prd_id, qty, price)
         values (#{pid}, #{cid}, #{prd_id}, #{qty}, #{price})
     </insert>
-</mapper>
+</mapper>   

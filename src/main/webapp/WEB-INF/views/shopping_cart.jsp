@@ -210,38 +210,43 @@
 			const p_pid = response.pid;
 			const p_cid = response.cid;
 
-			// prd 객체 순회
-			Object.keys(prd).forEach(p_prd => {
+			// 반복문쓰면 중복해서 데이터 삽입된다는 sql 오류 발생
+			// 하나넣고 서버로 옮겨지고를 반복해서 효율도 좋지 않음
+			// prd 객체를 배열로 변환
+			const requestData = Object.keys(prd).map(p_prd => {
 				const p_product = prd[p_prd];
 				const p_qty = p_product.qty;
 				const p_price = p_product.price * p_qty;
 
-				const requestData = {
+				return {
 					pid: p_pid,
 					cid: p_cid,
 					prd_id: parseInt(p_prd),
 					qty: p_qty,
 					price: p_price
 				};
+			});
 
-				console.log("purchaseDetail: ", requestData);
-				const request = new XMLHttpRequest()
-				request.onreadystatechange = function () {
-					if (this.readyState === 4) {
-						if (this.status === 200) {
-							console.log("purchase_detail success");
-						} else {
-							console.log("error purchase_detail insert");
-						}
+
+
+			// 한 번에 서버로 전송
+			const request = new XMLHttpRequest();
+			request.open("POST", "/api/purchaseDetail", true);
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+			request.onreadystatechange = function () {
+				if (this.readyState === 4) {
+					if (this.status === 200) {
+						console.log("purchase_detail success");
+					} else {
+						console.log("error purchase_detail insert");
 					}
-				};
-				const jsonData = JSON.stringify(requestData);
-				request.open("POST", "/api/purchaseDetail", true);
-				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-				request.send(jsonData);
-			})
-
+				}
+			};
+			const jsonData = JSON.stringify(requestData);
+			console.log("Final Request Data: ", jsonData);
+			request.send(jsonData);
 		}
+
 
 		// ========= 배송 시간 로직 (2시) =============
 		function orderTime() {

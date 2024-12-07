@@ -17,16 +17,16 @@
 	<div class="container-fluid my-4">
 		<header class="d-flex justify-content-between align-items-center mb-3">
 			<div>
-				<a href="">
+				<a href="/main.do">
 					<img class="brand-logo" src="./images/brand_logo.png">
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="" class="purchase quick-link">
+				<a href="/order.do" class="purchase quick-link">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="" class="cart quick-link">
+				<a href="/cartview.do" class="cart quick-link">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
@@ -46,101 +46,64 @@
 					</div>
 					<ul class="purchase-group">
 						<li class="purchase-group-item">
-							<div class="ms-1 mb-1 d-flex justify-content-between">
-								<span>주문번호 : 00001 ( 2024.12.02 01:00:00 )</span>
-								<span class="me-3">배송 전</span>
-							</div>
-							<div class="d-flex purchase-list-container">
-								<ul class="col list-group">
-									<li class="list-group-item d-flex align-items-center">
-										<div>
-											<img class="product-img" src="./images/coffee_bean_01.png">
-										</div>
-										<div class="col">
-											<div class="text-muted">커피콩</div>
-											<div>Columbia Nariñó</div>
-										</div>
-										<div class="px-3">5개</div>
-										<div class="px-3 text-center">25,000원</div>
-									</li>
-									<li class="list-group-item d-flex align-items-center">
-										<div>
-											<img class="product-img" src="./images/coffee_bean_01.png">
-										</div>
-										<div class="col">
-											<div class="text-muted">커피콩</div>
-											<div>Columbia Nariñó</div>
-										</div>
-										<div class="px-3">5개</div>
-										<div class="px-3 text-center">25,000원</div>
-									</li>
-								</ul>
-								<div class="px-3 my-auto">
-									<div class="my-4 d-flex justify-content-between">
-										<span class="pe-4">총 금액</span>
-										<span class="ps-4">50,000원</span>
-									</div>
-									<button class="w-100 btn btn-dark">환불하기</button>
-								</div>
-							</div>
-							<hr>
-						</li>
-						<li class="purchase-group-item">
-							<div class="ms-1 mb-1 d-flex justify-content-between">
-								<span>주문번호 : 00002 ( 2024.12.02 03:30:00 )</span>
-								<span class="me-3">배송 전</span>
-							</div>
-							<div class="d-flex purchase-list-container">
-								<ul class="col list-group">
-									<li class="list-group-item d-flex align-items-center">
-										<div>
-											<img class="product-img" src="./images/coffee_bean_01.png">
-										</div>
-										<div class="col">
-											<div class="text-muted">커피콩</div>
-											<div>Columbia Nariñó</div>
-										</div>
-										<div class="px-3">5개</div>
-										<div class="px-3 text-center">25,000원</div>
-									</li>
-									<li class="list-group-item d-flex align-items-center">
-										<div>
-											<img class="product-img" src="./images/coffee_bean_01.png">
-										</div>
-										<div class="col">
-											<div class="text-muted">커피콩</div>
-											<div>Columbia Nariñó</div>
-										</div>
-										<div class="px-3">5개</div>
-										<div class="px-3 text-center">25,000원</div>
-									</li>
-									<li class="list-group-item d-flex align-items-center">
-										<div>
-											<img class="product-img" src="./images/coffee_bean_01.png">
-										</div>
-										<div class="col">
-											<div class="text-muted">커피콩</div>
-											<div>Columbia Nariñó</div>
-										</div>
-										<div class="px-3">5개</div>
-										<div class="px-3 text-center">25,000원</div>
-									</li>
-								</ul>
-								<div class="px-3 my-auto">
-									<div class="my-4 d-flex justify-content-between">
-										<span class="pe-4">총 금액</span>
-										<span class="ps-4">75,000원</span>
-									</div>
-									<button class="w-100 btn btn-dark">환불하기</button>
-								</div>
-							</div>
-							<hr>
+
 						</li>
 					</ul>
 				</div>
 			</div>
 		</main>
 	</div>
+
+	<script src="/js/session.js"></script>
+	<script src="/js/history.js"></script>
+	<script src="/js/cart.js"></script>
+	<script type="text/javascript">
+		window.onload = function () {
+			checkSession();
+			setupLinks();
+			cartIcon();
+			purchase_detail();
+		}
+
+		function purchase_detail() {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/api/purchaseHistory", true);
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+			request.onreadystatechange = function () {
+				if (request.readyState === 4 && request.status === 200) {
+					const purchaseHistory = JSON.parse(request.responseText);
+					console.log("Fetched Purchase History:", purchaseHistory);
+
+					// 데이터를 order_time 기준으로 그룹화
+					const groupedData = groupByOrderTime(purchaseHistory);
+					console.log(groupedData);
+
+					// HTML 생성 및 표시
+					renderPurchaseHistory(groupedData);
+				}
+			};
+
+			request.send();
+		}
+
+		// 데이터 그룹화 함수(주문내역별 품목)
+		function groupByOrderTime(purchaseHistory) {
+			return purchaseHistory.reduce((acc, item) => {
+				if (!acc[item.order_time]) {
+					acc[item.order_time] = [];
+				}
+				acc[item.order_time].push(item);
+				return acc;
+			}, {});
+		}
+
+		// 총 금액 계산 함수
+		function calculateTotalPrice(orderItems) {
+			return orderItems.reduce((total, item) => total + item.total_price, 0);
+		}
+
+	</script>
 </body>
 
 </html>

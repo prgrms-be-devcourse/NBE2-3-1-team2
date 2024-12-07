@@ -52,6 +52,7 @@ function updateLogoutButton(loginBtnDiv) {
         const logoutRequest = new XMLHttpRequest();
         logoutRequest.onreadystatechange = function () {
             if (logoutRequest.readyState === 4 && logoutRequest.status === 200) {
+                window.localStorage.clear();
                 alert("로그아웃 되었습니다.");
                 loginBtnDiv.innerHTML = `<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>`;
                 window.location.href = "/main.do";

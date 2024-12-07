@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.PurchaseHistoryMapper">
+    <select id="purchaseHistoryInfo" resultType="purchaseHistory" parameterType="string">
+        SELECT
+            c.cid AS customer_id,
+            p.ot AS order_time,
+            pr.img AS image,
+            pr.cat AS category,
+            pr.name AS product_name,
+            pd.qty AS quantity,
+            pd.price AS total_price,
+            p.st AS delivery_status
+        FROM
+            customer c
+                JOIN
+            purchase p ON c.cid = p.cid
+                JOIN
+            purchase_detail pd ON p.pid = pd.pid
+                JOIN
+            product pr ON pd.prd_id = pr.pid
+        WHERE
+            c.email = #{email}
+        ORDER BY
+            p.ot DESC;
+    </select>
+</mapper>
