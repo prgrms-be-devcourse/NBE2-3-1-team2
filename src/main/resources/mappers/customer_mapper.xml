@@ -24,4 +24,8 @@
         set addr=#{addr}, zip=#{zip}
         where email=#{email} and pwd=password(#{pwd})
     </update>
+    <select id="countCustomer" resultType="int">
+        select count(*)
+        from customer;
+    </select>
 </mapper>

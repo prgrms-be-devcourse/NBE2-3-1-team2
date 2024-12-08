@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CustomerMapper {
+    int countCustomer();
     int authAccount(CustomerTO customer);
     CustomerTO selectByEmail(String email);
     int insertCustomer(CustomerTO customer);

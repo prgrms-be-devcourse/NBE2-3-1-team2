@@ -1,6 +1,7 @@
 package com.example.project01.dao;
 
 import com.example.project01.dto.PurchaseDateTO;
+import com.example.project01.dto.PurchaseJoinDetailTO;
 import com.example.project01.dto.PurchaseTO;
 import com.example.project01.dto.request.ReqOrderTO;
 import com.example.project01.mapper.PurchaseMapper;
@@ -43,5 +44,10 @@ public class PurchaseDAO {
             System.out.println(result);
             System.out.println("[에러] 배송 처리를 진행중에 시스템 에러가 발생했습니다. (" + e.getMessage() + ")");
         }
+    }
+
+    // 배송 완료
+    public List<PurchaseJoinDetailTO> getCompletedPurchases() {
+        return purchaseMapper.selectCompletedPurchases();
     }
 }

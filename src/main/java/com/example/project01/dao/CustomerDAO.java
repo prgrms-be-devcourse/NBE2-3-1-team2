@@ -36,4 +36,8 @@ public class CustomerDAO {
     public boolean updateCustomer(CustomerTO customer) {
         return customerMapper.updateCustomer(customer) > 0;
     }
+
+    public int countCustomers() {
+        return customerMapper.countCustomer();
+    }
 }

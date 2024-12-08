@@ -27,4 +27,12 @@
         SET st = '배송 완료'
         WHERE st = '배송 대기' AND sst &lt;= now()
     </update>
+    <select id="selectCompletedPurchases" resultType="join_detail">
+        select p.pid, date(p.ot) as ot, pd.qty, pd.price
+        from purchase p
+        join purchase_detail pd
+        on p.pid = pd.pid
+        where p.st='배송 완료'
+        order by p.ot desc;
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.example.project01.mapper;
 
 import com.example.project01.dto.PurchaseDateTO;
+import com.example.project01.dto.PurchaseJoinDetailTO;
 import com.example.project01.dto.PurchaseTO;
 import com.example.project01.dto.request.ReqOrderTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,4 +15,5 @@ public interface PurchaseMapper {
     List<PurchaseTO> selectByDate(PurchaseDateTO date);
     int updatePurchaseState(PurchaseTO purchase);
     int updatePendingPurchases();
+    List<PurchaseJoinDetailTO> selectCompletedPurchases();
 }

@@ -323,3 +323,44 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.4);
 }
+
+.dash-info-box {
+    border: 10px solid #ced4da;
+    height: 220px;
+    max-width: 220px;
+    min-width: 220px;
+    border-radius: 100%;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.dash-info-box > span {
+    font-size: 2rem;
+}
+
+.dash-info-box:nth-child(1):hover {
+    background-color: #94c8ff;
+}
+.dash-info-box:nth-child(2):hover {
+    background-color: #a4f8b6;
+}
+.dash-info-box:nth-child(3):hover {
+    background-color: #ffb6a5;
+}
+
+.table-box {
+    border: 2px solid #ced4da;
+    border-radius: 5px;
+}
+
+.dash-info-header{
+    background: #b0cbff;
+}
+
+.dash-info-item {
+    transition: all 0.3s;
+}
+
+.dash-info-item:hover {
+    background-color: #e9ecef;
+}

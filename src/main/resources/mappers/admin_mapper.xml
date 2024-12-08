@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.project01.mapper.AdminMapper">
+    <select id="authAdmin" parameterType="customer" resultType="int">
+        select count(*)
+        from admin a
+            join customer c
+                on a.email = c.email
+        where c.email = #{email} and c.pwd = password(#{pwd});
+    </select>
+</mapper>

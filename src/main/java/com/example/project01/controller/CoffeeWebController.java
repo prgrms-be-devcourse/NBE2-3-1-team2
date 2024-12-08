@@ -47,4 +47,41 @@ public class CoffeeWebController {
         }
         return "redirect:/main.do";
     }
+
+    @RequestMapping("management.login")
+    public String management(HttpSession session) {
+        if (session.getAttribute("a_email") != null) {
+            return "redirect:/management.view";
+        }
+        return "admin_auth";
+    }
+
+    @RequestMapping("management.view")
+    public String managementView(HttpSession session) {
+        if (session.getAttribute("a_email") != null) {
+            return "admin_dashboard";
+        }
+        return "redirect:/management.login";
+    }
+    @RequestMapping("management.customer")
+    public String managementCustomer(HttpSession session) {
+        if (session.getAttribute("a_email") != null) {
+            return "admin_customer";
+        }
+        return "redirect:/management.login";
+    }
+    @RequestMapping("management.cost")
+    public String managementCost(HttpSession session) {
+        if (session.getAttribute("a_email") != null) {
+            return "admin_cost";
+        }
+        return "redirect:/management.login";
+    }
+    @RequestMapping("management.product")
+    public String managementProduct(HttpSession session) {
+        if (session.getAttribute("a_email") != null) {
+            return "admin_product";
+        }
+        return "redirect:/management.login";
+    }
 }
