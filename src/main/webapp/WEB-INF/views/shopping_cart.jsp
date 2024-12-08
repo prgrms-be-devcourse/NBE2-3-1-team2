@@ -155,7 +155,7 @@
 
 				zipcode = document.getElementById('zipcode-input').value;
 				address = document.getElementById('address-input').value;
-				state = "배송전";
+				state = "배송대기";
 
 				if (zipcode.length != 5) {
 					alert("우편번호는 5자 입니다");

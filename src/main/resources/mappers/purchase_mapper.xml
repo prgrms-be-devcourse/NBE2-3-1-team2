@@ -7,4 +7,12 @@
         insert into purchase(cid, sst, zip, addr, st)
         values (#{cid}, #{sst}, #{zip}, #{addr}, #{st})
     </insert>
+
+    <update id="purchase_st_update">
+        <![CDATA[
+        update purchase
+        set st = '배송완료'
+        where sst <= now()
+        ]]>
+    </update>
 </mapper>

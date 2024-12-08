@@ -37,6 +37,11 @@ public class CoffeeApiController {
     // 데이터 조회
     // 바로 (query에서 받아온 것을 return)
     public ArrayList<ProductTO> getProducts() {
+
+        /// 상태 업데이트(main), 모든 페이지 처리하면 main 으로 넘어가므로
+        int update = purchaseDAO.purchaseUpdate(); // 상태 업데이트
+        System.out.println("update : " + update);
+
         System.out.println(productDAO.productList());
         return productDAO.productList();
     }
@@ -157,7 +162,8 @@ public class CoffeeApiController {
 
         try {
             for (PurchaseDetailTO detail : purchaseDetailTO) {
-                purchaseDetailDAO.purchaseDetail(detail);
+                int detailresult = purchaseDetailDAO.purchaseDetail(detail);
+                System.out.println("detailresult " + detailresult);
             }
             return ResponseEntity.ok("PurchaseDetail insert success");
         } catch (Exception e) {
@@ -167,6 +173,10 @@ public class CoffeeApiController {
 
     @PostMapping(value = "/api/purchaseHistory")
     public ArrayList<PurchaseHistoryTO> purchaseHistory(HttpSession session){
+
+        /// 상태 업데이트(주문내역), 주문내역 페이지에서 2시가 될수도 있음
+        int update = purchaseDAO.purchaseUpdate(); // 상태 업데이트
+        System.out.println("update : " + update);
 
         String email = (String) session.getAttribute("email");
         ArrayList<PurchaseHistoryTO> purchaseHistory = purchaseHistoryDAO.purchaseHistoryList(email);

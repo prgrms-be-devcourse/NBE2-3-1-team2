@@ -17,4 +17,8 @@ public class PurchaseDAO {
         purchaseMapper.purchase_info(purchaseTO);
         return purchaseTO;
     }
+
+    public int purchaseUpdate(){
+        return purchaseMapper.purchase_st_update();
+    }
 }
