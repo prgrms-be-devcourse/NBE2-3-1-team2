@@ -8,8 +8,8 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Setter
 public class PurchaseHistoryTO {
-    private int cid;
-    private String email;
+    private int customer_id;
+    private int purchase_id;
     private String order_time;
     private String image;
     private String category;

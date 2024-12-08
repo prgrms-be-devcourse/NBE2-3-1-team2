@@ -179,15 +179,32 @@ public class CoffeeApiController {
         System.out.println("update : " + update);
 
         String email = (String) session.getAttribute("email");
+        System.out.println(email);
+
         ArrayList<PurchaseHistoryTO> purchaseHistory = purchaseHistoryDAO.purchaseHistoryList(email);
-        System.out.println("purchaseHistory: " + purchaseHistory);
+
         return purchaseHistory;
     }
 
     // 환불 상태 업데이트
+    /// 실수 : @ReauestBody를 빼먹어서 연결이 계속 안됐음,,,,,,;;;
     @PostMapping(value = "/api/purchaseUpdateState")
-    public ResponseEntity<String> purchaseState2(PurchaseTO purchaseTO){
-        purchaseDAO.purchaseUpdate2(purchaseTO);
-        return ResponseEntity.ok("{\"statusUpdate\":\"success\"}");
+    public ResponseEntity<String> purchaseState2(@RequestBody PurchaseTO purchaseTO){
+
+        System.out.println("Received pid: " + purchaseTO.getPid());
+        System.out.println("Received cid: " + purchaseTO.getCid());
+
+        int purchaseupdate = purchaseDAO.purchaseUpdate2(purchaseTO);
+        System.out.println("purchaseupdate : " + purchaseupdate);
+
+
+        if(purchaseupdate > 0) {
+            System.out.println("환불 성공");
+            return ResponseEntity.ok("{\"status\":\"refund_success\"}");
+        } else {
+            System.out.println("환불 실패");
+            // return 401
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"status\":\"refund_incorrect\"}");
+        }
     }
 }

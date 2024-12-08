@@ -13,11 +13,12 @@
         update purchase
         set st = '배송완료'
         where sst <= now()
+        and st != '환불완료'
         ]]>
     </update>
 
     <update id="purchase_st_update2" parameterType="purchase">
-        update purchase set st = "환불완료"
+        update purchase set st = '환불완료'
         where pid = #{pid} and cid = #{cid};
     </update>
 

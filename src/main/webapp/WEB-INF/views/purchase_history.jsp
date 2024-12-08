@@ -68,7 +68,6 @@
 		function purchase_detail() {
 			const request = new XMLHttpRequest();
 			request.open("POST", "/api/purchaseHistory", true);
-			request.open("POST", "/api/purchaseHistory", true);
 			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
 			request.onreadystatechange = function () {
@@ -102,6 +101,42 @@
 		// 총 금액 계산 함수
 		function calculateTotalPrice(orderItems) {
 			return orderItems.reduce((total, item) => total + item.total_price, 0);
+		}
+
+		// 환불
+		function purchase_refund(pid, cid) {
+
+			// console.log("pid, cid", pid, cid)
+
+			const request = new XMLHttpRequest();
+			request.open("POST", "/api/purchaseUpdateState", true);
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+			request.onreadystatechange = function () {
+				if (request.readyState === 4) { // 요청 완료 상태
+					if (request.status === 200) {
+						const response = JSON.parse(request.responseText);
+						if (response.status === "refund_success") {
+							alert("환불되었습니다.");
+							window.location.href = "/order.do";
+						} else {
+							alert("환불 상태가 올바르지 않습니다.");
+						}
+					} else if (request.status === 401) {
+						alert("환불 불가합니다. 이미 처리된 주문일 수 있습니다.");
+					} else {
+						alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+					}
+				}
+			};
+			// 서버로 전송할 데이터
+			const payload = {
+				pid: Number(pid),
+				cid: Number(cid)
+			};
+
+			console.log(payload);
+			request.send(JSON.stringify(payload));
 		}
 
 	</script>
