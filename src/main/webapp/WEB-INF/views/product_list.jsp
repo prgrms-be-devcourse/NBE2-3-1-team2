@@ -53,7 +53,15 @@
 	</main>
 	<div id="toast-container">
 	</div>
+
+	<!-- 회원탈퇴 버튼 -->
+	<footer class="d-flex justify-content-end quick-link">
+		<button id="delete-account-btn" class="btn btn-danger mt-3 me-3" onclick="deleteAccount()">회원탈퇴</button>
+	</footer>
+
 </div>
+
+<script src="/js/delete.js"></script>
 <script src="/js/session.js"></script>
 <script type="text/javascript">
 	window.onload = function () {
@@ -91,6 +99,8 @@
 								<div class="text-end">
 									<button class="btn btn-outline-dark" onclick="createToastMsg(this, '\${list.pid}', '\${list.name}')">담기</button>
 								</div>
+
+
 							</li>`;
 						console.log(list)
 					}

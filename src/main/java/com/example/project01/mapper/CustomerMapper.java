@@ -13,4 +13,7 @@ public interface CustomerMapper {
 
     // customer defualt 정보 받아오기
     CustomerTO customer_info(String email);
+
+    // 회원 정보 삭제
+    int customer_delete(String email);
 }

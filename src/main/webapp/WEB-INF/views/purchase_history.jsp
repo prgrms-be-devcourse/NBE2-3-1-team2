@@ -44,6 +44,18 @@
 						<h5>주문내역</h5>
 						<hr>
 					</div>
+
+					<div class="w-100 mb-3">
+						<!-- 날짜 선택 -->
+						<div class="d-flex align-items-center">
+							<label for="startDate" class="me-2"></label>
+							<input type="date" id="startDate" class="form-control me-3" style="width: 200px;">
+							<label for="endDate" class="me-2"> ~ </label>
+							<input type="date" id="endDate" class="form-control me-3" style="width: 200px;">
+							<button class="btn btn-dark" onclick="filterByDate()">찾기</button>
+						</div>
+					</div>
+
 					<ul class="purchase-group">
 						<li class="purchase-group-item">
 
@@ -65,6 +77,7 @@
 			purchase_detail();
 		}
 
+		let purchaseHistory;
 		function purchase_detail() {
 			const request = new XMLHttpRequest();
 			request.open("POST", "/api/purchaseHistory", true);
@@ -72,7 +85,7 @@
 
 			request.onreadystatechange = function () {
 				if (request.readyState === 4 && request.status === 200) {
-					const purchaseHistory = JSON.parse(request.responseText);
+					purchaseHistory = JSON.parse(request.responseText);
 					console.log("Fetched Purchase History:", purchaseHistory);
 
 					// 데이터를 order_time 기준으로 그룹화
@@ -122,10 +135,6 @@
 						} else {
 							alert("환불 상태가 올바르지 않습니다.");
 						}
-					} else if (request.status === 401) {
-						alert("환불 불가합니다. 이미 처리된 주문일 수 있습니다.");
-					} else {
-						alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 					}
 				}
 			};
@@ -137,6 +146,47 @@
 
 			console.log(payload);
 			request.send(JSON.stringify(payload));
+		}
+
+		// 날짜별 기준
+		function normalizeDate(date) {
+			return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		}
+
+		// 찾기 누르면 해당 날짜로 rendering
+		function filterByDate() {
+			const startDateInput = document.getElementById("startDate").value;
+			const endDateInput = document.getElementById("endDate").value;
+
+			let startDate = startDateInput ? new Date(startDateInput) : null;
+			let endDate = endDateInput ? new Date(endDateInput) : null;
+
+			// 유효성 검사
+			if (startDate && endDate && startDate > endDate) {
+				alert("올바른 날짜 범위를 입력해주세요.");
+				return;
+			}
+
+			// 시간 정보 제거
+			startDate = startDate ? normalizeDate(startDate) : null;
+			endDate = endDate ? normalizeDate(endDate) : null;
+
+			const groupedData = groupByOrderTime(purchaseHistory);
+
+			const filteredData = Object.keys(groupedData).reduce((acc, orderTime) => {
+				const orderDate = normalizeDate(new Date(orderTime)); // 시간 정보 제거
+
+				if (
+						(!startDate || orderDate >= startDate) &&
+						(!endDate || orderDate <= endDate)
+				) {
+					acc[orderTime] = groupedData[orderTime];
+				}
+
+				return acc;
+			}, {});
+
+			renderPurchaseHistory(filteredData);
 		}
 
 	</script>

@@ -37,5 +37,8 @@ public class CustomerDAO {
         return customerMapper.customer_info(email);
     }
 
+    public int customerDelete(String email){
+        return customerMapper.customer_delete(email);
+    }
 
 }

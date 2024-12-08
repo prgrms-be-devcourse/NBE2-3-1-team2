@@ -1,6 +1,5 @@
 // session.js
 window.onload = function () {
-    consol.log("####session.js####")
     checkSession();
     setupLinks();
 };
@@ -12,9 +11,12 @@ function checkSession() {
     sessionRequest.onreadystatechange = function () {
         if (sessionRequest.readyState === 4) {
             if (sessionRequest.status === 200) {
-                updateLogoutButton(loginBtnDiv);
-            } else {
-                loginBtnDiv.innerHTML = `<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>`;
+                const response = JSON.parse(sessionRequest.responseText);
+                if(response.status === "logged_in"){
+                    updateLogoutButton(loginBtnDiv);
+                } else {
+                    loginBtnDiv.innerHTML = `<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>`;
+                }
             }
         }
     };
@@ -31,10 +33,14 @@ function setupLinks() {
             sessionCheckRequest.onreadystatechange = function () {
                 if (sessionCheckRequest.readyState === 4) {
                     if (sessionCheckRequest.status === 200) {
-                        window.location.href = link.getAttribute('href');
-                    } else {
-                        alert("로그인이 필요합니다.");
-                        window.location.href = "/login.do";
+                        const response = JSON.parse(sessionCheckRequest.responseText);
+                        if(response.status === "logged_in"){
+                            window.location.href = link.getAttribute('href');
+                        } else {
+                            alert("로그인이 필요합니다.");
+                            window.location.href = "/login.do";
+                        }
+
                     }
                 }
             };

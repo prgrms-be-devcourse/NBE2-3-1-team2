@@ -91,7 +91,7 @@
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
 				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="">로그인</a>
+					<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
 				</div>
 			</div>
 		</header>

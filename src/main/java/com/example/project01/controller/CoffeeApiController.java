@@ -94,8 +94,8 @@ public class CoffeeApiController {
             System.out.println("session" + email);
             return ResponseEntity.ok("{\"status\":\"logged_in\"}");
         } else {
-            System.out.println("session" + email);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"status\":\"not_logged_in\"}");
+            System.out.println("session can not find" + email);
+            return ResponseEntity.ok("{\"status\":\"not_logged_in\"}");
         }
     }
 
@@ -205,6 +205,25 @@ public class CoffeeApiController {
             System.out.println("환불 실패");
             // return 401
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"status\":\"refund_incorrect\"}");
+        }
+    }
+
+
+    @PostMapping(value = "/api/deleteAccount")
+    public ResponseEntity<String> deleteAccount(HttpSession session){
+        // session 값
+        String email = (String) session.getAttribute("email");
+        System.out.println(email);
+
+        // session dao에 전달
+        int resultDelete = customerDAO.customerDelete(email);
+        if(resultDelete > 0) {
+            session.invalidate();
+            System.out.println("계정 삭제 성공");
+            return ResponseEntity.ok("{\"status\":\"delete_success\"}");
+        } else {
+            System.out.println("계정 삭제 실패");
+            return ResponseEntity.ok("{\"status\":\"delete_failed\"}");
         }
     }
 }
