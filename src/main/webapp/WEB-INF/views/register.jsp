@@ -11,34 +11,93 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<title>Grids & Circle</title>
+	<script type="text/javascript">
+		window.onload = function () {
+
+			// 장바구니 아이콘 숫자 표시
+			let existingCart = JSON.parse(localStorage.getItem('cart')) || {}; // localStorage에서 값 가져오기
+			let productCount = Object.keys(existingCart).length;
+			document.getElementById('cart-counter').innerHTML = productCount;
+
+			// form 내의 버튼 클릭
+			const registerButton = document.querySelector('form button');
+			registerButton.onclick = function (event) {
+				event.preventDefault(); // 폴 기본 동작 방지
+
+				// 폼 데이터 가져오기
+				const email = document.getElementById('id-input').value;
+				const password = document.getElementById('pw-input').value;
+				const addr = document.getElementById('address-input').value;
+				const zip = document.getElementById('zipcode-input').value;
+
+				if (!email || !password || !addr || !zip) {
+					alert("모두 입력해주세요");
+					return;
+				}
+
+				if (zip.length != 5) {
+					alert("우편번호는 5자 입니다");
+				}
+
+				const request = new XMLHttpRequest();
+
+				request.onreadystatechange = function () {
+					if (request.readyState == 4) {
+						if (request.status == 200) {
+							console.log("서버 응답 : ", request.responseText);
+							alert("회원가입 되었습니다")
+							window.location.href = "/login.do";
+						} else if (request.status === 409) { // 이메일 중복 오류
+								alert("이미 존재하는 이메일입니다");
+						} else {
+							alert("회원가입 실패 : ", request.status);
+						}
+					}
+				}
+				// 요청 열기
+				request.open('POST', '/api/register', true);
+				request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+				// 데이터 전송(json 문자열 전송)
+				const requestData = JSON.stringify({
+					email: email,
+					pwd: password,
+					addr: addr,
+					zip: zip,
+				});
+				request.send(requestData);
+				console.log("전송 데이터: ", requestData);
+			}
+		}
+	</script>
 </head>
 
 <body>
 	<div class="container-fluid my-4">
 		<header class="d-flex justify-content-between align-items-center mb-3">
 			<div>
-				<a href="">
+				<a href="/main.do">
 					<img class="brand-logo" src="./images/brand_logo.png">
 				</a>
 			</div>
 			<div class="d-flex">
-				<a href="" class="purchase quick-link">
+				<a href="/order.do" class="purchase quick-link">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
 				</a>
-				<a href="" class="cart quick-link">
+				<a href="cartview.do" class="cart quick-link">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
 					<em class="cart-count" id="cart-counter">0</em>
 				</a>
 				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="">로그인</a>
+					<a class="btn btn-outline-dark login-btn" href="/login.do">로그인</a>
 				</div>
 			</div>
 		</header>
 		<hr>
 		<main class="card form-login p-5 mt-5">
-			<form action="">
+			<form action="/register.do">
 				<div class="w-100">
 					<h5>회원가입</h5>
 					<hr>
