@@ -15,4 +15,10 @@
         where sst <= now()
         ]]>
     </update>
+
+    <update id="purchase_st_update2" parameterType="purchase">
+        update purchase set st = "환불완료"
+        where pid = #{pid} and cid = #{cid};
+    </update>
+
 </mapper>

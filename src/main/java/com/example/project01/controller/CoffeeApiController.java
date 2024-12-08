@@ -183,4 +183,11 @@ public class CoffeeApiController {
         System.out.println("purchaseHistory: " + purchaseHistory);
         return purchaseHistory;
     }
+
+    // 환불 상태 업데이트
+    @PostMapping(value = "/api/purchaseUpdateState")
+    public ResponseEntity<String> purchaseState2(PurchaseTO purchaseTO){
+        purchaseDAO.purchaseUpdate2(purchaseTO);
+        return ResponseEntity.ok("{\"statusUpdate\":\"success\"}");
+    }
 }

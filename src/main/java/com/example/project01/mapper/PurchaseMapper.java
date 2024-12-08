@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PurchaseMapper {
     void purchase_info(PurchaseTO purchaseTO);
     int purchase_st_update();
+    int purchase_st_update2(PurchaseTO purchaseTO);
 }

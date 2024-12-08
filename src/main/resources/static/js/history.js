@@ -16,6 +16,14 @@ function renderPurchaseHistory(groupedData) {
         const groupItem = document.createElement('li');
         groupItem.classList.add('purchase-group-item');
 
+        // 배송 상태 처리(환불 버튼 변경)
+        const order_state = orderItems[0].delivery_status;
+        // 배송 완료인 경우, 환불 버튼 클릭 가능하도록(색상은 검정)
+        // 배송 대기인 경우, 환불 버튼
+        // 배송 상태에 따른 버튼 스타일 및 속성
+        const buttonClass = order_state === "배송완료" ? "btn-dark" : "btn-secondary";
+        const buttonDisabled = order_state === "배송완료" ? "" : "disabled";
+
         groupItem.innerHTML = `
             <div class="ms-1 mb-1 d-flex justify-content-between">
                 <span>주문번호 : ${orderNumber} ( ${orderTime} )</span>
@@ -42,7 +50,7 @@ function renderPurchaseHistory(groupedData) {
                         <span class="pe-4">총 금액</span>
                         <span class="ps-4">${calculateTotalPrice(orderItems).toLocaleString()}원</span>
                     </div>
-                    <button class="w-100 btn btn-dark">환불하기</button>
+                    <button class="w-100 btn ${buttonClass}" ${buttonDisabled}>환불하기</button>
                 </div>
             </div>
             <hr>

@@ -68,6 +68,7 @@
 		function purchase_detail() {
 			const request = new XMLHttpRequest();
 			request.open("POST", "/api/purchaseHistory", true);
+			request.open("POST", "/api/purchaseHistory", true);
 			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
 			request.onreadystatechange = function () {

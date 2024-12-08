@@ -21,4 +21,8 @@ public class PurchaseDAO {
     public int purchaseUpdate(){
         return purchaseMapper.purchase_st_update();
     }
+
+    public int purchaseUpdate2(PurchaseTO purchaseTO){
+        return purchaseMapper.purchase_st_update2(purchaseTO);
+    }
 }
