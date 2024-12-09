@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.project01.mapper.CustomerMapper">
+    <select id="selectCustomer" resultType="String" parameterType="cto">
+        SELECT cid FROM customer WHERE email = #{email} AND pwd = password(#{pwd});
+    </select>
+    <select id="isContainEmail" resultType="int" parameterType="cto">
+        SELECT count(*) FROM customer WHERE email = #{email};
+    </select>
+    <select id="selectCustomerById" resultType="cto" parameterType="String">
+        SELECT email, addr, zip FROM customer WHERE cid = #{cid};
+    </select>
+    <insert id="insertCustomer" parameterType="cto">
+        INSERT INTO customer (email, pwd, addr, zip)
+        VALUES (#{email}, password(#{pwd}), #{addr}, #{zip});
+    </insert>
+    <delete id="deleteCustomer" parameterType="java.util.Map">
+        DELETE FROM customer WHERE cid = #{cid} AND pwd = password(#{password});
+    </delete>
 </mapper>

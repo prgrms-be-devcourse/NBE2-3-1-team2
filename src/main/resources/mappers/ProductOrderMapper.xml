@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.ProductOrderMapper">
+    <select id="selectProductOrderList" resultType="poto">
+        SELECT p.pid, ot, sst, zip, addr, st, prd_id, qty, price
+        FROM purchase p JOIN purchase_detail pd
+        ON p.pid = pd.pid
+        WHERE p.cid=#{cid}
+        ORDER BY ot DESC, prd_id;
+    </select>
+    <select id="selectProductOrderListAfterInputDate" resultType="poto" parameterType="java.util.Map">
+        SELECT p.pid, ot, sst, zip, addr, st, prd_id, qty, price
+        FROM purchase p JOIN purchase_detail pd
+                             ON p.pid = pd.pid
+        WHERE p.cid=#{cid} AND ot>=#{startDate} AND #{endDate}>=ot
+        ORDER BY ot DESC, prd_id;
+    </select>
+</mapper>

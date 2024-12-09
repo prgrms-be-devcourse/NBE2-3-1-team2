@@ -4,4 +4,14 @@
     <select id="selectAllProduct" resultType="prdto">
         SELECT * FROM PRODUCT
     </select>
+    <select id="getPriceById" resultType="int" parameterType="int">
+        SELECT price FROM PRODUCT WHERE pid = #{pid}
+    </select>
+    <select id="selectProduct" resultType="prdto" parameterType="java.util.List">
+        SELECT * FROM PRODUCT
+        WHERE pid IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

@@ -3,10 +3,7 @@
 		 pageEncoding="UTF-8"%>
 <%
 	int cookieCount = (int) request.getAttribute("cookieCount");
-	String email = (String) request.getAttribute("email");
-	String saveEmailOption = (String) request.getAttribute("option");
 	String cid = (String) request.getAttribute("cid");
-	String msg = (String) request.getAttribute("message");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -22,57 +19,36 @@
 	<title>Grids & Circle</title>
 	<script type="text/javascript">
 		window.onload = function () {
-			if ( '<%=msg%>' !== 'null' ) {
-				alert('<%=msg%>');
-			}
 			if ( '<%=cid%>' !== 'null' ) {
 				document.getElementById('login-logout-btn-space').innerHTML = `<a class="btn btn-outline-dark login-btn" href="api/logout.do">로그아웃</a>`
 			} else {
 				document.getElementById('login-logout-btn-space').innerHTML = `<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>`
 			}
-			if ( '<%=email%>' !== '' && '<%=email%>' !== null ) {document.getElementById("floatingInput").value = atob('<%=email%>');}
-			if ( '<%=saveEmailOption%>' === 'true' ) {document.getElementById("flexCheckDefault").checked = true;}
 		}
-		function login(e) {
+		function deactive(e) {
 			e.preventDefault()
-			if (document.getElementById("floatingInput").value === '') {
-				alert('이메일을 입력해주세요.');
-				document.getElementById("floatingInput").focus();
-				return;
-			}
-			if (document.getElementById("floatingPassword").value === '') {
+			let password = document.getElementById("floatingPassword").value;
+			if (password === '') {
 				alert('비밀번호를 입력해주세요.');
 				document.getElementById("floatingPassword").focus();
 				return;
 			}
-			if ( document.getElementById("flexCheckDefault").checked ) {
-				let email = btoa(document.getElementById("floatingInput").value);
-				document.cookie = `email=` + encodeURIComponent(email) + `; max-age=\${60*60*24*30}`;
-				document.cookie = `saveEmailOption=true; max-age=\${60*60*24*30}`;
-			}
 			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/api/login', true);
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({
-				email: document.getElementById("floatingInput").value,
-				pwd: document.getElementById("floatingPassword").value
-			}));
-
+			console.log(password);
+			xhr.open('DELETE', `/api/delete/\${password}`, true);
+			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
-						let flag = JSON.parse(xhr.responseText);
-						if ( flag.flag === '-1' ) {
-							alert('존재하지 않는 이메일 입니다.');
-							console.log(flag);
-						} else if ( flag.flag === '-2' ) {
-							alert('패스워드가 틀렸습니다.');
-							console.log(flag);
-						} else if ( flag.flag === '1' ) {
+						if ( xhr.responseText === '1' ) {
+							alert('계정이 삭제되었습니다.');
 							location.href = 'main.do';
+						} else {
+							alert('패스워드가 틀렸습니다.');
+							document.getElementById('floatingPassword').focus();
 						}
 					} else {
-						alert('로그인에 실패하였습니다.');
+						alert('계정 삭제에 실패하였습니다.');
 					}
 				}
 			}
@@ -110,30 +86,15 @@
 		<main class="card form-login p-5 mt-5">
 			<form>
 				<div class="w-100">
-					<h5>로그인</h5>
+					<h5>계정삭제</h5>
 					<hr>
-				</div>
-
-				<div class="form-floating mb-3">
-					<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-					<label for="floatingInput">Email</label>
 				</div>
 				<div class="form-floating">
 					<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
 					<label for="floatingPassword">Password</label>
 				</div>
-
-				<div class="form-check text-start my-3">
-					<input class="form-check-input" type="checkbox" id="flexCheckDefault">
-					<label class="form-check-label" for="flexCheckDefault">
-						이메일 기억하기
-					</label>
-				</div>
-				<div class="d-flex flex-column">
-					<button class="btn btn-outline-dark w-50 mx-auto py-2" onclick="login(event)">로그인</button>
-					<div class="text-center mt-4">
-						<a href="join.do" class="reg-link">회원가입</a>
-					</div>
+				<div class="d-flex flex-column pt-4">
+					<button class="btn btn-outline-dark w-50 mx-auto" onclick="deactive(event)">삭제</button>
 				</div>
 			</form>
 		</main>

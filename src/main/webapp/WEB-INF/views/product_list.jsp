@@ -2,6 +2,11 @@
 <%@ page import="com.example.project01.dto.ProductDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
+<%
+	int cookieCount = (int) request.getAttribute("cookieCount");
+	String cid = (String) request.getAttribute("cid");
+	String msg = (String) request.getAttribute("message");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -15,6 +20,14 @@
 	<title>Grids & Circle</title>
 	<script type="text/javascript" async>
 		window.onload = function () {
+			if ( '<%=msg%>' !== 'null' ) {
+				alert('<%=msg%>');
+			}
+			if ( '<%=cid%>' !== 'null' ) {
+				document.getElementById('login-logout-btn-space').innerHTML = `<a class="btn btn-outline-dark login-btn" href="api/logout.do">로그아웃</a>`
+			} else {
+				document.getElementById('login-logout-btn-space').innerHTML = `<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>`
+			}
 			document.getElementById("product-list").innerHTML = "";
 			const request = new XMLHttpRequest();
 			request.onreadystatechange = function () {
@@ -31,7 +44,7 @@
 												<div class="text-muted">\${row.cat}</div>
 												<div>\${row.name}</div>
 											</div>
-											<div class="px-3 text-center">\${row.price}</div>
+											<div class="px-3 text-center">\${row.price.toLocaleString()}원</div>
 											<div class="px-3 num-input-div">
 												<input type="text" class="num-input" value="1">
 												<div class="num-btn">
@@ -67,6 +80,10 @@
 				</a>
 			</div>
 			<div class="d-flex">
+				<a href="deactivate.do" class="deactivate quick-link">
+					<img class="mx-auto" src="./images/person-x.svg" width="28" height="28">
+					<span class="cart-title">계정삭제</span>
+				</a>
 				<a href="order.do" class="purchase quick-link">
 					<img class="mx-auto" src="./images/purchase.png" width="28" height="28">
 					<span class="cart-title">주문내역</span>
@@ -74,10 +91,9 @@
 				<a href="cartView.do" class="cart quick-link">
 					<img class="mx-auto" src="./images/cart.png" width="28" height="28">
 					<span class="cart-title">장바구니</span>
-					<em class="cart-count" id="cart-counter">0</em>
+					<em class="cart-count" id="cart-counter"><%=cookieCount%></em>
 				</a>
-				<div class="login-btn-div">
-					<a class="btn btn-outline-dark login-btn" href="login.do">로그인</a>
+				<div id="login-logout-btn-space" class="login-btn-div">
 				</div>
 			</div>
 		</header>
@@ -116,8 +132,6 @@
 		});
 
 		function createToastMsg(inputNum, prdName, prdId) {
-			console.log(`Product ID: \${prdId}, Product Name: \${prdName}`);
-
 			// Toast 메시지 생성
 			const toast = document.createElement("div");
 			let count = parseInt(
@@ -137,21 +151,28 @@
 				setTimeout(() => toast.remove(), 500);
 			}, 2000);
 
-			// 쿠키 처리
-			let cookies = document.cookie.split('; ');
-			let existingValue = 0;
+			// 장바구니 쿠키 생성
+			const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+				const [key, value] = cookie.split('=');
+				acc[key] = decodeURIComponent(value);
+				return acc;
+			}, {});
 
-			cookies.forEach(cookie => {
-				let [key, value] = cookie.split('=');
-				if (key === prdId) {
-					existingValue = parseInt(value) || 0; // 기본값 0
-				}
-			});
-			let newValue = existingValue + count;
+			let cartCookie = cookies.cart ? JSON.parse(cookies.cart) : [];
 
-			let date = new Date();
-			date.setTime(date.getTime() + (60 * 1000)); // 1일 후 만료
-			document.cookie = `\${prdId}=\${newValue}; expires=\${date.toUTCString()}; path=/`;
+			const existingItemIndex = cartCookie.findIndex(item => item.productId === prdId);
+
+			if (existingItemIndex !== -1) {
+				cartCookie[existingItemIndex].count = parseInt(cartCookie[existingItemIndex].count) + parseInt(inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value);
+			} else {
+				cartCookie.push({
+					timestamp: Date.now(),
+					productId: prdId,
+					count: parseInt(inputNum.closest('.list-group-item').querySelector('.num-input-div .num-input').value)
+				});
+			}
+			document.cookie = "cart=" + encodeURIComponent(JSON.stringify(cartCookie)) + `; max-age=\${60*60*24*30}; path=/`;
+			document.getElementById("cart-counter").innerHTML = cartCookie.length;
 		}
 	</script>
 </body>

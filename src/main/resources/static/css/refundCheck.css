@@ -1,0 +1,32 @@
+.chk-refund {
+    display: none; /* 필수 */
+}
+.chk-refund-space {
+    line-height: 50%;
+    padding: 15px;
+}
+.chk-refund + label {  /* 체크박스 만들기 */
+    width: 20px;
+    height: 20px;
+    border: 2px solid #000;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+    border-radius: 3px;
+    user-select: none /* 드래그 금지 */
+}
+
+.chk-refund:checked + label {  /* 체크되었을 때 */
+    background: skyblue;
+}
+
+.chk-refund + label + label {
+    top: 6px;
+    left: 5px;
+    font-size: 20px;
+    position: relative;
+    letter-spacing: -5px;
+    cursor: pointer;
+    user-select: none;
+}
+

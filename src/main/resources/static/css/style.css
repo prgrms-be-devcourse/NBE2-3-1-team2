@@ -69,7 +69,13 @@
 }
 .cart {
 	position: relative;
-	margin: 0 10px;
+	margin-right: 10px;
+}
+.purchase {
+	position: relative;
+}
+.deactivate {
+	position: relative;
 }
 .cart > div {
 	margin: auto;
@@ -161,20 +167,59 @@
 }
 
 /* shopping_cart.html */
-.delete-btn {
+.btn-delete {
 	position: absolute;
 	top: 5px;
 	right: 10px;
-	font-size: 0.8rem;
+	font-size: 0.7rem;
 	text-decoration: none;
-	color: red;
 	font-weight: bold;
-	transition: color 0.15s;
+	color: maroon;
+	padding: 0.2rem 0.4rem;
 }
 
-.delete-btn:hover {
-	color: #7c0000;
+.btn-delete:hover {
+	color: azure;
+	background-color: indianred;
 }
+
+.btn-jelly:hover {
+	animation: jelly 0.5s;
+}
+
+.refunded-btn {
+	background-color: #c6c6c6;
+	border-width: 0;
+	color: #5e5e5e;
+	border-radius: 4px 4px 4px 4px;
+	padding: 6px 12px;
+	cursor: default !important;
+}
+
+.delivered-btn {
+	background-color: #28a745;
+	border-width: 0;
+	color: #fff;
+	border-radius: 4px 4px 4px 4px;
+	padding: 6px 12px;
+	cursor: default !important;
+}
+
+/* jelly 애니메이션 정의 */
+@keyframes jelly {
+	25% {
+		transform: scale(0.9, 1.1);
+	}
+
+	50% {
+		transform: scale(1.1, 0.9);
+	}
+
+	75% {
+		transform: scale(0.95, 1.05);
+	}
+}
+
 .purchase-form {
 	min-width: 300px;
 }
@@ -219,3 +264,81 @@
 	transition: opacity 0.5s ease, transform 0.5s ease;
   transform: translateY(20px);
 }
+
+.check-invalid {
+	display: inline-block;
+	font-size: 0.8rem;
+	padding-left: 10px;
+	color: crimson;
+}
+
+input[type='date']{
+	position: relative;
+	background: url(../images/calendar3.svg) no-repeat right 5px bottom 10px / 16px auto;
+}
+input[type='date']:before {
+	content: attr(data-placeholder);
+}
+input[type='date']:valid::before {
+	display: none;
+}
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-inner-spin-button {display: none;}
+input[type='date']::-webkit-calendar-picker-indicator {
+	position:absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	color: transparent;
+	cursor : pointer;
+}
+
+
+/* 조회 버튼 애니 */
+.btn-search-dark {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #1c2933 !important;
+	color: #f3f3f3 !important;
+	width: 5rem;
+	margin: 1rem;
+	border-radius: 8px !important;
+}
+
+.btn-search-gray {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #f1f1f1 !important;
+	width: 5rem;
+	margin: 1rem;
+	border-radius: 8px !important;
+	border-color: #d5d5d5 !important;
+}
+
+.btn-pulse-gray:hover {
+	box-shadow: 0 0 0 12px transparent;
+	animation: pulse-gray 0.5s;
+}
+
+.btn-pulse-dark:hover {
+	box-shadow: 0 0 0 12px transparent;
+	animation: pulse-dark 0.5s;
+}
+
+@keyframes pulse-dark {
+	from {
+		box-shadow: 0 0 0 0 #212529;
+	}
+}
+@keyframes pulse-gray {
+	from {
+		box-shadow: 0 0 0 0 #cccccc;
+	}
+}
+
+
+
