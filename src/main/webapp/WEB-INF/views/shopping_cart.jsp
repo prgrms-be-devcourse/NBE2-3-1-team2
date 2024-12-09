@@ -247,7 +247,6 @@
 			localStorage.setItem('cart', JSON.stringify(updatedCartData));
 
 			// 삭제된 후 UI나 카운트 등을 업데이트
-			alert('pid가 삭제되었습니다!');
 			updateCartCount();
 			updateTotalPrice();
 		}

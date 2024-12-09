@@ -10,4 +10,5 @@ public interface ProductMapper {
 
     ArrayList<ProductTO> lists();
     ProductTO cart_lists(String pid);
+    String findImg(String pid);
 }

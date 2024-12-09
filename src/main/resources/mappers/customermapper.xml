@@ -23,4 +23,12 @@
     <select id="findCid" parameterType="String" resultType="Integer">
         SELECT cid FROM customer WHERE email=#{email}
     </select>
+
+    <select id="pwdCheck" parameterType="customer">
+        SELECT count(*) FROM customer WHERE pwd=password(#{pwd}) and cid=#{cid}
+    </select>
+
+    <delete id="delete" parameterType="customer">
+        delete from customer where cid=#{cid}
+    </delete>
 </mapper>

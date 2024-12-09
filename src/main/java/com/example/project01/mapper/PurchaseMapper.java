@@ -9,4 +9,5 @@ public interface PurchaseMapper {
 
     int purchase(PurchaseTO to);
     int detail(PurchaseDetailTO detail);
+    void updatePendingPurchase();
 }

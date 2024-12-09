@@ -25,9 +25,18 @@ public class CustomerDAO {
         return customerMapper.emailCheck(email);
     }
 
+    public boolean pwdCheck (CustomerTO to) {
+
+        return customerMapper.pwdCheck(to);
+    }
+
+
+    public int delete (CustomerTO to) {
+        return customerMapper.delete(to);
+    }
+
     public Integer findCid(String email) {
         return customerMapper.findCid(email);
     }
-
 
 }

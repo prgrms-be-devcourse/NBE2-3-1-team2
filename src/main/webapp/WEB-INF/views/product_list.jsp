@@ -140,8 +140,13 @@
 					</ul>
 				</div>
 			</div>
+
 		</main>
+
 		<div id="toast-container">
+		</div>
+		<div id="">
+			<a class="btn btn-outline-dark" href="delete.do" style="float:right; margin-top: 20px; margin-right: 20px";>회원 탈퇴</a>
 		</div>
 	</div>
 
@@ -215,7 +220,6 @@
 
 			localStorage.setItem('cart', JSON.stringify(cart));
 
-			alert(`\${name} 상품이 \${itemBtn.value}개 추가되었습니다.`);
 			updateCartCount();
 		}
 

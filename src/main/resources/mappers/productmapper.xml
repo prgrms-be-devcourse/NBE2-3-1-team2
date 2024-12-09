@@ -13,4 +13,9 @@
         where pid=#{pid}
     </select>
 
+    <select id="findImg" parameterType="String" resultType="String">
+        select img from product
+        where pid=#{pid}
+    </select>
+
 </mapper>

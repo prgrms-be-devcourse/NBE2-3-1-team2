@@ -16,6 +16,11 @@ public class CoffeWebController {
         return "login";
     }
 
+    @RequestMapping("delete.do")
+    public String delete() {
+        return "account_delete";
+    }
+
     @RequestMapping("cart.do")
     public String cart() {
         return "shopping_cart";

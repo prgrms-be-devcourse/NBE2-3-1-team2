@@ -11,4 +11,8 @@
         INSERT INTO purchase_detail (pid, cid, prd_id, qty, price)
         VALUES (#{pid}, #{cid}, #{prd_id}, #{qty}, #{price});
     </insert>
+
+    <update id="updatePendingPurchase">
+        update purchase set st="배송 완료" where st="배송 대기"
+    </update>
 </mapper>

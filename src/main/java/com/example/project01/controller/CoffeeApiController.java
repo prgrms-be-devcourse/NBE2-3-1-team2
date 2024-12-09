@@ -3,6 +3,7 @@ package com.example.project01.controller;
 import com.example.project01.dao.CustomerDAO;
 import com.example.project01.dao.ProductDAO;
 import com.example.project01.dao.PurchaseDAO;
+import com.example.project01.dao.PurchaseHistoryDAO;
 import com.example.project01.dto.*;
 import com.example.project01.enums.OrderStatus;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,9 +29,39 @@ public class CoffeeApiController {
     @Autowired
     private PurchaseDAO purchaseDAO;
 
+    @Autowired
+    private PurchaseHistoryDAO purchaseHistoryDAO;
+
     @GetMapping( "/emp/json" )
     public ArrayList<ProductTO> product_list() {
         return productDAO.lists();
+    }
+
+    @GetMapping( "/emp/history" )
+    public ArrayList<PurchaseHistoryTO> history(HttpSession session) {
+        String cid = String.valueOf(session.getAttribute("cid"));
+        ArrayList<PurchaseHistoryTO> to = purchaseHistoryDAO.historys(cid);
+
+        for(int i = 0 ; i < to.size() ; i++){
+            String pid = to.get(i).getPrd_id();
+            String img = purchaseHistoryDAO.findImg(pid);
+            System.out.println(img);
+            to.get(i).setImg(img);
+        }
+        System.out.println(to);
+        return to;
+    }
+
+    @PutMapping("/emp/refund/{pid}")
+    public  Map<String, String> refund(@PathVariable String pid) {
+        //int pid = data.get("Pid");
+        System.out.println("Pid: " + pid);
+
+        int result = purchaseHistoryDAO.refund(pid);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        return response;
     }
 
     @PostMapping("/emp/cart")
@@ -64,6 +95,27 @@ public class CoffeeApiController {
         return redirectView;
     }
 
+    @DeleteMapping("emp/delete")
+    public String delete(@RequestBody Map<String, String> data, HttpSession session) {
+        String pwd = data.get("pwd");
+        String cid = String.valueOf(session.getAttribute("cid"));
+
+        System.out.println("pwd: " + pwd);
+        System.out.println("cid: " + cid);
+
+        CustomerTO to = new CustomerTO();
+        to.setCid(cid);
+        to.setPwd(pwd);  // 비밀번호를 객체에 설정
+
+        // 비밀번호 확인 후 삭제 처리
+        if (customerDAO.pwdCheck(to)) {
+            int flag = customerDAO.delete(to);  // 삭제 처리
+            session.invalidate();
+            return flag > 0 ? "delete" : "fail";
+        }
+        return "fail";  // 비밀번호가 일치하지 않으면 실패 처리
+    }
+
     @PostMapping("/emp/login")
     public RedirectView login(HttpServletRequest request){
         RedirectView redirectView = new RedirectView();
@@ -81,7 +133,8 @@ public class CoffeeApiController {
             redirectView.setUrl("/main.do");
             HttpSession session = request.getSession();
             session.setAttribute("login_email", email);
-
+            Integer cid = customerDAO.findCid(email);
+            session.setAttribute("cid", cid);
         } else {
             redirectView.setUrl("/login.do?error=loginfailed");
         }
@@ -124,7 +177,7 @@ public class CoffeeApiController {
         System.out.println("상태 시간(sst): " + sst);
 
 
-        OrderStatus st = OrderStatus.PENDING;
+        String st = OrderStatus.PENDING.getDesc();
         String zip = request.getZip();
         String addr = request.getAddr();
         String email = request.getEmail();
@@ -154,7 +207,8 @@ public class CoffeeApiController {
             detail.setCid(cid);
             detail.setPrd_id(items.getPid());
             detail.setQty(items.getCount());
-            detail.setPrice(items.getPrice());
+            int price = items.getPrice() * items.getCount();
+            detail.setPrice(price);
 
             purchaseDAO.detail(detail);
         }

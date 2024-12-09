@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.project01.mapper.PurchaseHistoryMapper">
+
+    <select id="history" parameterType="String" resultType="history">
+        SELECT p.pid, ot, sst, zip, addr, st, prd_id, qty, price
+        FROM purchase p JOIN purchase_detail pd
+                             ON p.pid = pd.pid
+        WHERE p.cid=#{cid}
+        ORDER BY ot, prd_id
+    </select>
+
+    <update id="refund" parameterType="String">
+        update purchase set st="환불 완료" where pid=#{pid}
+    </update>
+
+</mapper>
+
