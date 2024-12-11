@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.project01.mapper.CustomerMapper">
-    <select id="select" resultType="String">
-        select now() as now
+
+    <!--** 수정 필요 ** select 문의 경우 나중에 합치고, java에서 처리하기-->
+
+    <insert id="customer_register" parameterType="register">
+        insert into customer(email, pwd, addr, zip)
+        values(#{email}, password(#{pwd}), #{addr}, #{zip})
+    </insert>
+
+    <select id="customer_emailCHK" parameterType="register">
+        select coalesce(cid, -1)
+        from customer
+        where email=#{email};
     </select>
+
+    <select id="customer_pwdCHK" parameterType="register" resultType="int">
+        select count(*)
+        from customer
+        where email=#{email} and pwd = password(#{pwd});
+    </select>
+
+    <select id="customer_info" parameterType="string" resultType="register">
+        select cid, email, addr, zip
+        from customer
+        where email=#{email};
+    </select>
+
+    <delete id="customer_delete" parameterType="string">
+        delete from customer
+        where email = #{email};
+    </delete>
+
 </mapper>
 
